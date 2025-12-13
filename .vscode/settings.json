@@ -1,0 +1,21 @@
+{
+  "deno.enable": true,
+  "deno.lint": true,
+  "typescript.validate.enable": false,
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "css.customData": [
+    ".vscode/tailwind.json"
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "workbench.editor.customLabels.patterns": {
+    "**/client/routes/**/index.tsx": "${dirname} - Page"
+  }
+}
