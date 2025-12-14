@@ -1,6 +1,7 @@
-import { MongoClient } from "mongodb";
+import { connect } from "mongoose";
 import env from "~/env.ts";
 
-export const client = new MongoClient(env.MONGODB_URI);
+const mongoose = await connect(env.MONGODB_URI);
 
-export const db = client.db(env.DB_NAME);
+export const client = mongoose.connection.getClient();
+export const db = client.db();

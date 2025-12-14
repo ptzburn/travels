@@ -1,0 +1,5 @@
+{
+  "lint": {
+    "plugins": ["jsr:@ryu/deno-lint-plugin-tailwindcss@0.2.0"]
+  }
+}
