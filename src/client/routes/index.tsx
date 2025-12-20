@@ -1,7 +1,13 @@
 import { Card, CardContent } from "../components/ui/card.tsx";
 import { AuthButton } from "../components/auth-button.tsx";
+// @ts-types="solid-js"
+import { Show } from "solid-js";
+import { useSession } from "../contexts/session-context.tsx";
+import { A } from "@solidjs/router";
+import { Button } from "../components/ui/button.tsx";
 
 export default function Home() {
+  const { user } = useSession();
   return (
     <Card class="container mx-auto mt-4 bg-muted">
       <CardContent class="flex min-h-96 items-center justify-center text-center">
@@ -14,7 +20,18 @@ export default function Home() {
             log app. Add locations, photos, and notes to create a digital
             journal of your journeys.
           </p>
-          <AuthButton />
+          <Show
+            when={!user()}
+            fallback={
+              <A href="/dashboard">
+                <Button variant="default">
+                  Start Logging
+                </Button>
+              </A>
+            }
+          >
+            <AuthButton />
+          </Show>
         </div>
       </CardContent>
     </Card>
