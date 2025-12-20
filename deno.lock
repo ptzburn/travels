@@ -22,6 +22,7 @@
     "npm:pino-pretty@^13.1.3": "13.1.3",
     "npm:pino@^10.1.0": "10.1.0",
     "npm:solid-js@^1.9.5": "1.9.10_seroval@1.3.2",
+    "npm:solid-sonner@~0.2.8": "0.2.8_solid-js@1.9.10__seroval@1.3.2",
     "npm:tailwind-merge@^3.4.0": "3.4.0",
     "npm:tailwindcss-animate@^1.0.7": "1.0.7_tailwindcss@4.1.18",
     "npm:tailwindcss@^4.1.18": "4.1.18",
@@ -3529,6 +3530,12 @@
         "solid-js"
       ]
     },
+    "solid-sonner@0.2.8_solid-js@1.9.10__seroval@1.3.2": {
+      "integrity": "sha512-EQ2EIznvHHpAmkYh2CTu0AdCgmPJRJWLGFRWygE8j+vMEfvIV2wotHU5qgWzqzVTG1SODGsay2Lwq6ENWx/rPA==",
+      "dependencies": [
+        "solid-js"
+      ]
+    },
     "solid-use@0.9.1_solid-js@1.9.10__seroval@1.3.2": {
       "integrity": "sha512-UwvXDVPlrrbj/9ewG9ys5uL2IO4jSiwys2KPzK4zsnAcmEl7iDafZWW1Mo4BSEWOmQCGK6IvpmGHo1aou8iOFw==",
       "dependencies": [
@@ -4196,6 +4203,7 @@
         "npm:pino-pretty@^13.1.3",
         "npm:pino@^10.1.0",
         "npm:solid-js@^1.9.5",
+        "npm:solid-sonner@~0.2.8",
         "npm:tailwind-merge@^3.4.0",
         "npm:tailwindcss-animate@^1.0.7",
         "npm:tailwindcss@^4.1.18",
