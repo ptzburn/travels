@@ -32,21 +32,30 @@
     --color-accent-foreground: oklch(0.205 0 0);
 
     --color-destructive: oklch(0.577 0.245 27.325);
-    --color-destructive-foreground: oklch(0.985 0 0);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
 
-    --color-info: oklch(0.946 0.084 222.109);
-    --color-info-foreground: oklch(0.682 0.163 219.804);
+    --color-info: hsl(204 94% 94%);
+    --color-info-foreground: hsl(199 89% 48%);
 
-    --color-success: oklch(0.905 0.096 166.233);
-    --color-success-foreground: oklch(0.722 0.169 166.233);
+    --color-success: hsl(149 80% 90%);
+    --color-success-foreground: hsl(160 84% 39%);
 
-    --color-warning: oklch(0.948 0.12 78.052);
-    --color-warning-foreground: oklch(0.789 0.201 60.647);
+    --color-warning: hsl(48 96% 89%);
+    --color-warning-foreground: hsl(25 95% 53%);
 
-    --color-error: oklch(0.93 0.167 25.258);
-    --color-error-foreground: oklch(0.704 0.191 22.216);
+    --color-error: hsl(0 93% 94%);
+    --color-error-foreground: hsl(0 84% 60%);
 
-    --color-ring: oklch(0.708 0 0);
+    --color-ring: oklch(0.439 0 0);
+
+    --sidebar-background: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
   }
 
   .dark,
@@ -60,37 +69,46 @@
     --color-accent: oklch(0.269 0 0);
     --color-accent-foreground: oklch(0.985 0 0);
 
-    --color-popover: oklch(0.205 0 0);
+    --color-popover: oklch(0.145 0 0);
     --color-popover-foreground: oklch(0.985 0 0);
 
-    --color-border: oklch(1 0 0 / 10%);
-    --color-input: oklch(1 0 0 / 15%);
+    --color-border: oklch(0.269 0 0);
+    --color-input: oklch(0.269 0 0);
 
-    --color-card: oklch(0.205 0 0);
+    --color-card: oklch(0.145 0 0);
     --color-card-foreground: oklch(0.985 0 0);
 
-    --color-primary: oklch(0.922 0 0);
+    --color-primary: oklch(0.985 0 0);
     --color-primary-foreground: oklch(0.205 0 0);
 
     --color-secondary: oklch(0.269 0 0);
     --color-secondary-foreground: oklch(0.985 0 0);
 
-    --color-destructive: oklch(0.704 0.191 22.216);
-    --color-destructive-foreground: oklch(0.985 0 0);
+    --color-destructive: oklch(0.396 0.141 25.723);
+    --color-destructive-foreground: oklch(0.637 0.237 25.331);
 
-    --color-info: oklch(0.488 0.243 264.376);
-    --color-info-foreground: oklch(0.769 0.188 70.08);
+    --color-info: hsl(226.2 57% 21%);
+    --color-info-foreground: hsl(199 89% 48%);
 
-    --color-success: oklch(0.627 0.265 303.9);
-    --color-success-foreground: oklch(0.985 0 0);
+    --color-success: hsl(165.7 91.3% 9%);
+    --color-success-foreground: hsl(160 84% 39%);
 
-    --color-warning: oklch(0.645 0.246 16.439);
-    --color-warning-foreground: oklch(0.985 0 0);
+    --color-warning: hsl(26 83.3% 14.1%);
+    --color-warning-foreground: hsl(25 95% 53%);
 
-    --color-error: oklch(0.645 0.246 16.439);
-    --color-error-foreground: oklch(0.985 0 0);
+    --color-error: hsl(0 74.7% 15.5%);
+    --color-error-foreground: hsl(0 84% 60%);
 
-    --color-ring: oklch(0.556 0 0);
+    --color-ring: oklch(0.439 0 0);
+
+    --sidebar-background: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(0.269 0 0);
+    --sidebar-ring: oklch(0.439 0 0);
   }
 
   * {
@@ -177,6 +195,15 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
   @keyframes accordion-down {
     from {

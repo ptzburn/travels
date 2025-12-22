@@ -15,25 +15,25 @@ import { getInitials } from "../lib/utils.ts";
 import { A } from "@solidjs/router";
 import LogOut from "lucide-solid/icons/log-out";
 
-const [isLoading, setIsLoading] = createSignal(false);
+export const [isLoading, setIsLoading] = createSignal(false);
+
+export const signInWithGoogle = async () => {
+  setIsLoading(true);
+  await authClient.signIn.social({
+    provider: "google",
+    callbackURL: "/dashboard",
+    errorCallbackURL: "/auth/error",
+    fetchOptions: {
+      onError: (error) => {
+        console.error(error.error.message);
+      },
+    },
+  });
+  setIsLoading(false);
+};
 
 export function AuthButton() {
   const { user } = useSession();
-
-  const signInWithGoogle = async () => {
-    setIsLoading(true);
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/dashboard",
-      errorCallbackURL: "/auth/error",
-      fetchOptions: {
-        onError: (error) => {
-          console.error(error.error.message);
-        },
-      },
-    });
-    setIsLoading(false);
-  };
   return (
     <Show
       when={user()}
