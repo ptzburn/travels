@@ -3,7 +3,7 @@ import { createAuthClient } from "better-auth/solid";
 import type { auth } from "~/shared/auth.ts";
 
 export const authClient = createAuthClient({
-    plugins: [
-        inferAdditionalFields<typeof auth>(),
-    ],
+  plugins: [
+    inferAdditionalFields<typeof auth>(),
+  ],
 });

@@ -53,7 +53,7 @@ function AddLocationPage() {
   const navigate = useNavigate();
 
   return (
-    <div class="container max-w-md mx-auto">
+    <div class="container mx-auto max-w-md">
       <Show when={isAlertDialogOpen()}>
         <AlertDialog
           open={isAlertDialogOpen()}
@@ -89,7 +89,7 @@ function AddLocationPage() {
         </p>
       </div>
       <form
-        class="flex flex-col mt-4 gap-2"
+        class="mt-4 flex flex-col gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();

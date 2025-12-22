@@ -51,7 +51,7 @@ const SheetOverlay = <T extends ValidComponent = "div">(
   return (
     <SheetPrimitive.Overlay
       class={cn(
-        "fixed inset-0 z-50 bg-black/80 data-[expanded=]:animate-in data-[closed=]:animate-out data-[closed=]:fade-out-0 data-[expanded=]:fade-in-0",
+        "data-[closed=]:fade-out-0 data-[expanded=]:fade-in-0 fixed inset-0 z-50 bg-black/80 data-[closed=]:animate-out data-[expanded=]:animate-in",
         local.class,
       )}
       {...others}
@@ -105,7 +105,7 @@ const SheetContent = <T extends ValidComponent = "div">(
         {...others}
       >
         {local.children}
-        <SheetPrimitive.CloseButton class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+        <SheetPrimitive.CloseButton class="absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-secondary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -164,7 +164,7 @@ const SheetTitle = <T extends ValidComponent = "h2">(
   const [local, others] = splitProps(props as DialogTitleProps, ["class"]);
   return (
     <SheetPrimitive.Title
-      class={cn("text-lg font-semibold text-foreground", local.class)}
+      class={cn("font-semibold text-foreground text-lg", local.class)}
       {...others}
     />
   );
@@ -182,7 +182,7 @@ const SheetDescription = <T extends ValidComponent = "p">(
   ]);
   return (
     <SheetPrimitive.Description
-      class={cn("text-sm text-muted-foreground", local.class)}
+      class={cn("text-muted-foreground text-sm", local.class)}
       {...others}
     />
   );

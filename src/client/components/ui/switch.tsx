@@ -26,7 +26,7 @@ const SwitchControl = <T extends ValidComponent = "input">(
     <>
       <SwitchPrimitive.Input
         class={cn(
-          "[&:focus-visible+div]:outline-none [&:focus-visible+div]:ring-2 [&:focus-visible+div]:ring-ring [&:focus-visible+div]:ring-offset-2 [&:focus-visible+div]:ring-offset-background",
+          "[&:focus-visible+div]:outline-none [&:focus-visible+div]:ring-2 [&:focus-visible+div]:ring-offset-2 [&:focus-visible+div]:ring-offset-background [&:focus-visible+div]:ring-ring",
           local.class,
         )}
       />
@@ -73,7 +73,7 @@ const SwitchLabel = <T extends ValidComponent = "label">(
   return (
     <SwitchPrimitive.Label
       class={cn(
-        "text-sm font-medium leading-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-70",
+        "font-medium text-sm leading-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-70",
         local.class,
       )}
       {...others}

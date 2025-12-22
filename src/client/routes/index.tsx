@@ -9,7 +9,7 @@ import { Button } from "../components/ui/button.tsx";
 export default function Home() {
   const { user } = useSession();
   return (
-    <Card class="container mx-auto mt-4 bg-muted">
+    <Card class="container mx-auto mt-4">
       <CardContent class="flex min-h-96 items-center justify-center text-center">
         <div class="max-w-md">
           <h1 class="font-bold text-5xl">

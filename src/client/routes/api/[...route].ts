@@ -3,7 +3,7 @@ import type { APIEvent } from "@solidjs/start/server";
 import honoApp from "~/api/app.ts";
 
 async function handler(event: APIEvent) {
-    return await honoApp.fetch(event.request);
+  return await honoApp.fetch(event.request);
 }
 
 export const GET = handler;
