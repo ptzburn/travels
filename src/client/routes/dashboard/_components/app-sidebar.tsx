@@ -12,7 +12,7 @@ import { Separator } from "~/client/components/ui/separator.tsx";
 const navMain = [
   {
     title: "Locations",
-    url: "/dashboard/locations",
+    url: "/dashboard",
     icon: Map,
     isActive: true,
   },

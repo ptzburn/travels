@@ -20,7 +20,6 @@ import {
 } from "~/client/components/ui/alert-dialog.tsx";
 import { Show } from "solid-js";
 import { addLocationAction } from "~/client/lib/actions/locations.ts";
-import { error } from "node:console";
 
 function AddLocationPage() {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = createSignal(false);

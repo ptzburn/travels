@@ -4,6 +4,12 @@ import { InsertLocation } from "~/shared/types.ts";
 
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 5);
 
+export async function findAllUserLocations(user: string) {
+  return await Location.find({
+    user,
+  });
+}
+
 export async function findLocationBySlug(slug: string) {
   return await Location.findOne({
     slug,

@@ -1,4 +1,4 @@
-import { createAsync, RouteSectionProps } from "@solidjs/router";
+import { createAsync, RouteSectionProps, useLocation } from "@solidjs/router";
 import { Suspense } from "solid-js";
 import { Separator } from "../components/ui/separator.tsx";
 import { getCookie } from "vinxi/http";
@@ -22,11 +22,9 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbSeparator,
 } from "../components/ui/breadcrumb.tsx";
 import { clientOnly } from "@solidjs/start";
 import { ThemeToggle } from "../components/theme-toggle.tsx";
-// @ts-types="solid-js"
 import { Show } from "solid-js";
 
 const AppSidebar = clientOnly(() =>
@@ -45,6 +43,7 @@ function DefaultLayout(props: RouteSectionProps) {
   );
 
   const session = createAsync(() => userSessionQuery());
+  const location = useLocation();
 
   return (
     <MetaProvider>
@@ -71,13 +70,11 @@ function DefaultLayout(props: RouteSectionProps) {
                       <Breadcrumb>
                         <BreadcrumbList>
                           <BreadcrumbItem class="hidden md:block">
-                            <BreadcrumbLink href="#">
-                              Building Your Application
+                            <BreadcrumbLink href={location.pathname}>
+                              {location.pathname === "/dashboard"
+                                ? "Locations"
+                                : "Add location"}
                             </BreadcrumbLink>
-                          </BreadcrumbItem>
-                          <BreadcrumbSeparator class="hidden md:block" />
-                          <BreadcrumbItem>
-                            Data Fetching
                           </BreadcrumbItem>
                         </BreadcrumbList>
                       </Breadcrumb>

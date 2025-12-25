@@ -1,4 +1,4 @@
-import { createRoute } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 
 import jsonContent from "~/api/utils/json-content.ts";
 import {
@@ -17,6 +17,33 @@ import jsonContentRequired from "~/api/utils/json-content-required.ts";
 import { authMiddleware, defaultRateLimiter } from "~/api/middlewares/index.ts";
 
 const tags = ["Locations"];
+
+export const get = createRoute({
+  summary: "GET endpoint for fetching locations",
+  description: "Fetches all the location that the user has previously added",
+  tags,
+  method: "get",
+  path: "/locations",
+  middleware: [authMiddleware, defaultRateLimiter],
+  responses: {
+    [HttpStatus.OK.CODE]: jsonContent(
+      z.array(SelectLocationSchema),
+      "Schema of location array",
+    ),
+    [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
+      unauthorizedSchema,
+      "Unauthorized",
+    ),
+    [HttpStatus.TOO_MANY_REQUESTS.CODE]: jsonContent(
+      tooManyRequestsSchema,
+      "Rate limit exceeded",
+    ),
+    [HttpStatus.INTERNAL_SERVER_ERROR.CODE]: jsonContent(
+      serverErrorSchema,
+      "Internal server error",
+    ),
+  },
+});
 
 export const post = createRoute({
   summary: "POST endpoint for adding locations",
@@ -59,4 +86,5 @@ export const post = createRoute({
   },
 });
 
+export type GetRoute = typeof get;
 export type PostRoute = typeof post;
