@@ -1,4 +1,4 @@
-import type { ZodSchema } from "~/shared/types.ts";
+import type { ZodSchema } from "~/api/lib/types.ts";
 
 function jsonContent<
   T extends ZodSchema,

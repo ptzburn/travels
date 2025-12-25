@@ -2,7 +2,7 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 
 import { Scalar } from "@scalar/hono-api-reference";
 
-import type { AppBindings } from "~/shared/types.ts";
+import type { AppBindings } from "~/api/lib/types.ts";
 
 export default function configureOpenApi(app: OpenAPIHono<AppBindings>): void {
   app.doc("/doc", {

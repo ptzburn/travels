@@ -1,6 +1,6 @@
 import { rateLimiter } from "hono-rate-limiter";
 
-import type { AppBindings } from "~/shared/types.ts";
+import type { AppBindings } from "~/api/lib/types.ts";
 
 import { TOO_MANY_REQUESTS } from "~/shared/http-status.ts";
 

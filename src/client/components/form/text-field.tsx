@@ -37,6 +37,7 @@ export function TextField(props: TextFieldProps) {
         type={props.type ?? "text"}
         max={props.max}
         min={props.min}
+        step={props.type === "number" ? "0.000000001" : undefined}
         name={field().name}
         value={field().state.value}
         onBlur={field().handleBlur}
@@ -48,6 +49,7 @@ export function TextField(props: TextFieldProps) {
           )}
         aria-invalid={isInvalid()}
         placeholder={props.placeholder ?? ""}
+        disabled={field().form.state.isSubmitting}
       />
       <Show when={props.description}>
         {(description) => (
@@ -61,7 +63,9 @@ export function TextField(props: TextFieldProps) {
           ? (field().state.meta.errors.map(
             (error) =>
               error?.message && (
-                <TextFieldErrorMessage>{error.message}</TextFieldErrorMessage>
+                <TextFieldErrorMessage>
+                  {error.message}
+                </TextFieldErrorMessage>
               ),
           ))
           : null}

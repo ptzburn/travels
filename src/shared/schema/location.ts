@@ -15,8 +15,8 @@ export const SelectLocationSchema = z.object({
   description: z.string().trim().max(1000).optional(),
   lat: z.number().max(90).min(-90),
   long: z.number().max(180).min(-180),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export const InsertLocationSchema = SelectLocationSchema.omit({

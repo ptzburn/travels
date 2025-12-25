@@ -2,7 +2,6 @@ import { hc } from "hono/client";
 
 import type { AppType } from "~/api/app.ts";
 
-// This is a trick to calculate the type when compiling
 export type Client = ReturnType<typeof hc<AppType>>;
 
 export function hcWithType(...args: Parameters<typeof hc>): Client {

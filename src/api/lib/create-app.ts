@@ -2,8 +2,10 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { contextStorage } from "hono/context-storage";
 import { poweredBy } from "hono/powered-by";
 import { requestId } from "hono/request-id";
+import { csrf } from "hono/csrf";
+import { cors } from "hono/cors";
 
-import type { AppBindings } from "~/shared/types.ts";
+import type { AppBindings } from "~/api/lib/types.ts";
 
 import { notFound, onError, pinoLogger } from "~/api/middlewares/index.ts";
 import defaultHook from "~/api/utils/default-hook.ts";
@@ -19,6 +21,8 @@ export function createRouter(): OpenAPIHono<AppBindings> {
 export default function createApp(): OpenAPIHono<AppBindings> {
   const app = createRouter();
   app
+    .use("/api/*", cors())
+    .use(csrf())
     .use(contextStorage())
     .use(requestId())
     .use(poweredBy())

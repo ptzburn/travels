@@ -7,6 +7,7 @@ import { InsertLocation } from "~/shared/types.ts";
 import { toast } from "solid-sonner";
 import {
   BeforeLeaveEventArgs,
+  useAction,
   useBeforeLeave,
   useNavigate,
 } from "@solidjs/router";
@@ -18,10 +19,14 @@ import {
   AlertDialogTitle,
 } from "~/client/components/ui/alert-dialog.tsx";
 import { Show } from "solid-js";
+import { addLocationAction } from "~/client/lib/actions/locations.ts";
+import { error } from "node:console";
 
 function AddLocationPage() {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = createSignal(false);
   const [navigation, setNavigation] = createSignal<(() => void) | null>(null);
+
+  const addLocation = useAction(addLocationAction);
 
   const form = useAppForm(() => ({
     defaultValues: {
@@ -36,9 +41,30 @@ function AddLocationPage() {
     onSubmitInvalid: () => {
       toast.error("Check the input values");
     },
-    onSubmit: async ({ value }) => {
-      // Do something with form data
-      console.log(value);
+    onSubmit: async ({ value, formApi }) => {
+      try {
+        const result = await addLocation(value);
+
+        if ("errors" in result && result.errors) {
+          for (const error of result.errors) {
+            const [fieldName, message] = Object.entries(error)[0];
+            formApi.setFieldMeta(fieldName as keyof InsertLocation, (prev) => ({
+              ...prev,
+              isTouched: true,
+              errorMap: {
+                ...prev.errorMap,
+                onSubmit: { message },
+              },
+            }));
+          }
+        } else {
+          formApi.reset();
+          navigate("/dashboard");
+          toast.success("Location was added");
+        }
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Unknown error");
+      }
     },
   }));
 
@@ -125,10 +151,19 @@ function AddLocationPage() {
           </form.AppField>
         </fieldset>
         <div class="flex justify-end gap-2">
-          <Button type="button" variant="outline" onclick={() => navigate(-1)}>
-            <ArrowLeft size={24} />
-            Cancel
-          </Button>
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <Button
+                type="button"
+                variant="outline"
+                onclick={() => navigate(-1)}
+                disabled={isSubmitting()}
+              >
+                <ArrowLeft size={24} />
+                Cancel
+              </Button>
+            )}
+          </form.Subscribe>
           <form.AppForm>
             <form.SubmitButton icon={CirclePlus} label="Add" />
           </form.AppForm>

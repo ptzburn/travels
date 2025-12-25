@@ -1,6 +1,4 @@
-import { ParentProps } from "solid-js";
-
-function DashboardPage(props: ParentProps) {
+function DashboardPage() {
   return <h1>Hello world</h1>;
 }
 

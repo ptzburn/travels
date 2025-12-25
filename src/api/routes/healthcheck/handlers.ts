@@ -1,4 +1,4 @@
-import type { AppRouteHandler } from "~/shared/types.ts";
+import type { AppRouteHandler } from "~/api/lib/types.ts";
 import { OK } from "~/shared/http-status.ts";
 
 import type { HealthCheckRoute } from "./routes.ts";

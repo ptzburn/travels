@@ -1,14 +1,12 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
 } from "~/client/components/ui/sidebar.tsx";
 import { NavUser } from "./nav-user.tsx";
 import { NavMain } from "./nav-main.tsx";
 import Map from "lucide-solid/icons/map";
 import CirclePlus from "lucide-solid/icons/circle-plus";
-import { ThemeToggle } from "~/client/components/theme-toggle.tsx";
 import { Separator } from "~/client/components/ui/separator.tsx";
 
 const navMain = [
@@ -36,10 +34,6 @@ function AppSidebar() {
       <SidebarContent>
         <NavMain items={navMain} />
       </SidebarContent>
-      <Separator />
-      <SidebarFooter class="my-2">
-        <ThemeToggle />
-      </SidebarFooter>
     </Sidebar>
   );
 }

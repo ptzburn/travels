@@ -7,16 +7,22 @@ import env from "~/env.ts";
 import * as httpStatus from "~/shared/http-status.ts";
 
 const onError: ErrorHandler = (error, c) => {
-  const currentStatus = "status" in error
-    ? error.status
-    : c.newResponse(null).status;
+  const currentCode = "code" in error ? error.code : null;
+
+  let currentStatus = c.newResponse(null).status;
+
+  if ("status" in error) {
+    currentStatus = error.status as number;
+  } else if (currentCode === 11000) {
+    currentStatus = 409;
+  }
+
   const statusCode = currentStatus !== httpStatus.OK.CODE
     ? (currentStatus as ContentfulStatusCode)
     : httpStatus.INTERNAL_SERVER_ERROR.CODE;
   const environment = env.NODE_ENV;
 
   if (error instanceof HTTPException) {
-    c.var.logger.error("HTTPException: ", error);
     if (error.status === httpStatus.UNPROCESSABLE_ENTITY.CODE) {
       return c.json({
         success: false,
@@ -34,10 +40,15 @@ const onError: ErrorHandler = (error, c) => {
   }
 
   if (error instanceof Error) {
-    c.var.logger.error(error);
+    let errorMessage = error.message;
+
+    if (error.message.includes("locations index: user_1_name_1")) {
+      errorMessage = "A location with that name already exists";
+    }
+
     return c.json({
       success: false,
-      message: error.message,
+      message: errorMessage,
       stack: environment === "production" ? undefined : error.stack,
     }, statusCode);
   }

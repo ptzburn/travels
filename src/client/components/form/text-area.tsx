@@ -37,6 +37,7 @@ export function TextArea(props: TextFieldProps) {
         onChange={(e) => field().handleChange(e.target.value)}
         aria-invalid={isInvalid()}
         placeholder={props.placeholder ?? ""}
+        disabled={field().form.state.isSubmitting}
       />
       <Show when={props.description}>
         {(description) => (

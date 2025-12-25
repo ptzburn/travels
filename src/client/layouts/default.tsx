@@ -25,6 +25,9 @@ import {
   BreadcrumbSeparator,
 } from "../components/ui/breadcrumb.tsx";
 import { clientOnly } from "@solidjs/start";
+import { ThemeToggle } from "../components/theme-toggle.tsx";
+// @ts-types="solid-js"
+import { Show } from "solid-js";
 
 const AppSidebar = clientOnly(() =>
   import("../routes/dashboard/_components/app-sidebar.tsx")
@@ -53,29 +56,34 @@ function DefaultLayout(props: RouteSectionProps) {
             user={() => session()?.user}
           >
             <SidebarProvider>
-              <AppSidebar />
+              <Show when={session()?.user}>
+                <AppSidebar />
+              </Show>
               <SidebarInset>
-                <header class="flex h-16 shrink-0 items-center gap-2">
+                <header class="mr-4 flex h-16 shrink-0 items-center justify-between">
                   <div class="flex items-center gap-2 px-4">
-                    <SidebarTrigger class="-ml-1" />
-                    <Separator
-                      orientation="vertical"
-                      class="mr-2 data-[orientation=vertical]:h-4"
-                    />
-                    <Breadcrumb>
-                      <BreadcrumbList>
-                        <BreadcrumbItem class="hidden md:block">
-                          <BreadcrumbLink href="#">
-                            Building Your Application
-                          </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator class="hidden md:block" />
-                        <BreadcrumbItem>
-                          Data Fetching
-                        </BreadcrumbItem>
-                      </BreadcrumbList>
-                    </Breadcrumb>
+                    <Show when={session()?.user}>
+                      <SidebarTrigger class="-ml-1" />
+                      <Separator
+                        orientation="vertical"
+                        class="mr-2 data-[orientation=vertical]:h-4"
+                      />
+                      <Breadcrumb>
+                        <BreadcrumbList>
+                          <BreadcrumbItem class="hidden md:block">
+                            <BreadcrumbLink href="#">
+                              Building Your Application
+                            </BreadcrumbLink>
+                          </BreadcrumbItem>
+                          <BreadcrumbSeparator class="hidden md:block" />
+                          <BreadcrumbItem>
+                            Data Fetching
+                          </BreadcrumbItem>
+                        </BreadcrumbList>
+                      </Breadcrumb>
+                    </Show>
                   </div>
+                  <ThemeToggle />
                 </header>
                 <main class="flex flex-1 flex-col gap-4 p-4 pt-0">
                   {props.children}

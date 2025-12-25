@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 
-import type { AppBindings } from "~/shared/types.ts";
+import type { AppBindings } from "~/api/lib/types.ts";
 
 import { auth } from "~/shared/auth.ts";
 import { UNAUTHORIZED } from "~/shared/http-status.ts";
