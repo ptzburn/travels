@@ -29,6 +29,10 @@ import { ThemeToggle } from "../components/theme-toggle.tsx";
 import { Show } from "solid-js";
 import { LocationsProvider } from "../contexts/locations.tsx";
 
+const MapComponent = clientOnly(() =>
+  import("../routes/dashboard/_components/map.tsx")
+);
+
 const AppSidebar = clientOnly(() =>
   import("../routes/dashboard/_components/app-sidebar.tsx")
 );
@@ -87,7 +91,12 @@ function DefaultLayout(props: RouteSectionProps) {
                     <ThemeToggle />
                   </header>
                   <main class="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    {props.children}
+                    <div>
+                      {props.children}
+                    </div>
+                    <div class="flex-1">
+                      <MapComponent />
+                    </div>
                   </main>
                   <Toaster />
                 </SidebarInset>
