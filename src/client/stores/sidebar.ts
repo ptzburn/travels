@@ -3,6 +3,7 @@ import { LucideIcon } from "lucide-solid/icons";
 
 export type SidebarItem = {
   title: string;
+  description?: string;
   url: string;
   icon: LucideIcon;
 };
