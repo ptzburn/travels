@@ -1,11 +1,11 @@
 import { A, createAsync } from "@solidjs/router";
 import CirclePlus from "lucide-solid/icons/circle-plus";
 import Map from "lucide-solid/icons/map";
+import MapPin from "lucide-solid/icons/map-pin";
 import { ErrorBoundary, Suspense } from "solid-js";
 import { For, Show } from "solid-js";
 import { Button } from "~/client/components/ui/button.tsx";
 import { userLocationsQuery } from "~/client/lib/queries/locations.ts";
-import { Spinner } from "~/client/components/ui/spinner.tsx";
 import {
   Card,
   CardContent,
@@ -20,13 +20,49 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "~/client/components/ui/empty.tsx";
+import { setSidebarStore } from "~/client/stores/sidebar.ts";
+import { createEffect } from "solid-js";
+import { Skeleton } from "~/client/components/ui/skeleton.tsx";
 
 function DashboardPage() {
   const locations = createAsync(() => userLocationsQuery());
 
+  createEffect(() => {
+    const items = locations()?.map((location) => ({
+      title: location.name,
+      url: "#",
+      icon: MapPin,
+    }));
+    if (items) {
+      setSidebarStore("sidebarItems", items);
+      setSidebarStore("isLoading", false);
+    } else {
+      setSidebarStore("isLoading", true);
+    }
+  });
+
   return (
     <div class="p-4">
-      <Suspense fallback={<Spinner />}>
+      <Suspense
+        fallback={
+          <div class="flex flex-wrap mt-4 gap-2">
+            <For each={[0, 1, 2]}>
+              {() => (
+                <Card class="w-72 h-45">
+                  <CardHeader>
+                    <CardTitle>
+                      <Skeleton height={20} width={200} radius={20} />
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton height={10} width={200} radius={20} />
+                  </CardContent>
+                </Card>
+              )}
+            </For>
+          </div>
+        }
+      >
         <ErrorBoundary fallback={<p>An error occured.</p>}>
           <Show when={locations()}>
             {(locations) => (

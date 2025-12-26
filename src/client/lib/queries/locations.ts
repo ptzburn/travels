@@ -4,6 +4,7 @@ import { rpcClient } from "~/shared/rpc-client.ts";
 
 export const userLocationsQuery = query(async () => {
   "use server";
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   const event = getRequestEvent();
   if (!event) {
     throw new Error("No request event available");

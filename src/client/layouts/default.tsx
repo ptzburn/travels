@@ -1,5 +1,5 @@
 import { createAsync, RouteSectionProps, useLocation } from "@solidjs/router";
-import { Suspense } from "solid-js";
+import { createEffect, Suspense } from "solid-js";
 import { Separator } from "../components/ui/separator.tsx";
 import { getCookie } from "vinxi/http";
 import {
@@ -11,6 +11,7 @@ import { isServer } from "solid-js/web";
 import { SessionProvider } from "../contexts/session-context.tsx";
 import { userSessionQuery } from "../lib/queries/auth.ts";
 import { MetaProvider } from "@solidjs/meta";
+import MapPin from "lucide-solid/icons/map-pin";
 import { Toaster } from "../components/ui/sonner.tsx";
 import {
   SidebarInset,
@@ -26,6 +27,8 @@ import {
 import { clientOnly } from "@solidjs/start";
 import { ThemeToggle } from "../components/theme-toggle.tsx";
 import { Show } from "solid-js";
+import { userLocationsQuery } from "../lib/queries/locations.ts";
+import { setSidebarStore } from "../stores/sidebar.ts";
 
 const AppSidebar = clientOnly(() =>
   import("../routes/dashboard/_components/app-sidebar.tsx")
@@ -43,7 +46,23 @@ function DefaultLayout(props: RouteSectionProps) {
   );
 
   const session = createAsync(() => userSessionQuery());
+  const locations = createAsync(() => userLocationsQuery());
+
   const location = useLocation();
+
+  createEffect(() => {
+    const items = locations()?.map((location) => ({
+      title: location.name,
+      url: "#",
+      icon: MapPin,
+    }));
+    if (items) {
+      setSidebarStore("sidebarItems", items);
+      setSidebarStore("isLoading", false);
+    } else {
+      setSidebarStore("isLoading", true);
+    }
+  });
 
   return (
     <MetaProvider>

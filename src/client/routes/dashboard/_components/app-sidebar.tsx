@@ -8,19 +8,20 @@ import { NavMain } from "./nav-main.tsx";
 import Map from "lucide-solid/icons/map";
 import CirclePlus from "lucide-solid/icons/circle-plus";
 import { Separator } from "~/client/components/ui/separator.tsx";
+import { NavLocations } from "./nav-locations.tsx";
+import { Show } from "solid-js";
+import { sidebarStore } from "../../../stores/sidebar.ts";
 
 const navMain = [
   {
     title: "Locations",
     url: "/dashboard",
     icon: Map,
-    isActive: true,
   },
   {
     title: "Add Location",
     url: "/dashboard/add",
     icon: CirclePlus,
-    isActive: false,
   },
 ];
 
@@ -33,6 +34,12 @@ function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
+        <Show
+          when={sidebarStore.isLoading || sidebarStore.sidebarItems.length}
+        >
+          <Separator />
+        </Show>
+        <NavLocations />
       </SidebarContent>
     </Sidebar>
   );
