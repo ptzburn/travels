@@ -4,7 +4,6 @@ import { rpcClient } from "~/shared/rpc-client.ts";
 import { query } from "@solidjs/router";
 
 export const userLocationQuery = query(async () => {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
   let cookie: string;
 
   if (isServer) {

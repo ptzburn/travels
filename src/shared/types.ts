@@ -9,7 +9,17 @@ export type User = typeof auth.$Infer.Session.user;
 export type Session = typeof auth.$Infer.Session.session;
 
 // LOCATIONS
-export type SelectLocation = z.infer<typeof SelectLocationSchema>;
+export type SelectLocation = {
+  _id: string;
+  user: string;
+  name: string;
+  slug: string;
+  lat: number;
+  long: number;
+  createdAt: string;
+  updatedAt: string;
+  description?: string | undefined;
+};
 export type SelectLocations = {
   _id: string;
   user: string;

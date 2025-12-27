@@ -65,7 +65,7 @@ function DefaultLayout(props: RouteSectionProps) {
                 <Show when={session()?.user}>
                   <AppSidebar />
                 </Show>
-                <SidebarInset>
+                <SidebarInset class="h-screen overflow-hidden flex flex-col">
                   <header class="mr-4 flex h-16 shrink-0 items-center justify-between">
                     <div class="flex items-center gap-2 px-4">
                       <Show when={session()?.user}>
@@ -89,12 +89,12 @@ function DefaultLayout(props: RouteSectionProps) {
                     </div>
                     <ThemeToggle />
                   </header>
-                  <main class="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    <div>
+                  <main class="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-hidden">
+                    <div class="shrink-0">
                       {props.children}
                     </div>
                     <Show when={session() && location.pathname !== "/"}>
-                      <div class="flex-1">
+                      <div class="flex-1 min-h-0 relative overflow-hidden rounded-xl">
                         <MapComponent />
                       </div>
                     </Show>

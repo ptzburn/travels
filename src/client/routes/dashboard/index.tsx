@@ -26,6 +26,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "~/client/components/ui/carousel.tsx";
+import { selectedLocation, setSelectedLocation } from "./_components/map.tsx";
 
 function DashboardPage() {
   const locations = useLocations();
@@ -89,7 +90,15 @@ function DashboardPage() {
                   <For each={locs()}>
                     {(location) => (
                       <CarouselItem class="md:basis-1/2 lg:basis-1/3">
-                        <Card>
+                        <Card
+                          class={`${
+                            selectedLocation() === location
+                              ? "border-accent-foreground"
+                              : ""
+                          } hover:cursor-pointer`}
+                          onMouseEnter={() => setSelectedLocation(location)}
+                          onMouseLeave={() => setSelectedLocation(null)}
+                        >
                           <CardHeader>
                             <CardTitle>{location.name}</CardTitle>
                           </CardHeader>

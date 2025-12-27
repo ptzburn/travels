@@ -13,7 +13,8 @@ import { Show } from "solid-js";
 import { Skeleton } from "~/client/components/ui/skeleton.tsx";
 import { useLocations } from "~/client/contexts/locations.tsx";
 import { Suspense } from "solid-js";
-import { Separator } from "../../../components/ui/separator.tsx";
+import { Separator } from "~/client/components/ui/separator.tsx";
+import { selectedLocation, setSelectedLocation } from "./map.tsx";
 
 export function NavLocations() {
   const locations = useLocations();
@@ -54,8 +55,16 @@ export function NavLocations() {
                   {(location) => (
                     <Collapsible>
                       <A href="#">
-                        <SidebarMenuItem>
-                          <SidebarMenuButton tooltip={location.name}>
+                        <SidebarMenuItem
+                          class={selectedLocation() === location
+                            ? "bg-accent rounded"
+                            : undefined}
+                          onMouseEnter={() => setSelectedLocation(location)}
+                          onMouseLeave={() => setSelectedLocation(null)}
+                        >
+                          <SidebarMenuButton
+                            tooltip={location.name}
+                          >
                             <MapPin />
                             <span>{location.name}</span>
                           </SidebarMenuButton>
