@@ -10,7 +10,7 @@ const Empty: Component<ComponentProps<"div">> = (props) => {
     <div
       data-slot="empty"
       class={cn(
-        "flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12",
+        "flex min-w-0 flex-1 flex-col items-center justify-center gap-6 text-balance rounded-lg border-dashed p-6 text-center md:p-12",
         local.class,
       )}
       {...others}
@@ -73,7 +73,7 @@ const EmptyTitle: Component<ComponentProps<"div">> = (props) => {
   return (
     <div
       data-slot="empty-title"
-      class={cn("text-lg font-medium tracking-tight", local.class)}
+      class={cn("font-medium text-lg tracking-tight", local.class)}
       {...others}
     />
   );
@@ -85,7 +85,7 @@ const EmptyDescription: Component<ComponentProps<"p">> = (props) => {
     <div
       data-slot="empty-description"
       class={cn(
-        "text-muted-foreground [&>a:hover]:text-primary text-sm/relaxed [&>a]:underline [&>a]:underline-offset-4",
+        "text-muted-foreground text-sm/relaxed [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
         local.class,
       )}
       {...others}
@@ -99,7 +99,7 @@ const EmptyContent: Component<ComponentProps<"div">> = (props) => {
     <div
       data-slot="empty-content"
       class={cn(
-        "flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance",
+        "flex w-full min-w-0 max-w-sm flex-col items-center gap-4 text-balance text-sm",
         local.class,
       )}
       {...others}

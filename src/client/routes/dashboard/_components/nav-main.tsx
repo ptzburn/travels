@@ -22,10 +22,10 @@ type NavMainProps = {
 };
 
 export function NavMain(props: NavMainProps) {
-  const { user } = useSession();
+  const session = useSession();
   const location = useLocation();
   return (
-    <Show when={user()} fallback={null}>
+    <Show when={session()?.user} fallback={null}>
       <SidebarGroup>
         <SidebarMenu>
           <For each={props.items}>

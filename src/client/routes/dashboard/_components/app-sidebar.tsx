@@ -9,8 +9,6 @@ import Map from "lucide-solid/icons/map";
 import CirclePlus from "lucide-solid/icons/circle-plus";
 import { Separator } from "~/client/components/ui/separator.tsx";
 import { NavLocations } from "./nav-locations.tsx";
-import { Show } from "solid-js";
-import { sidebarStore } from "../../../stores/sidebar.ts";
 
 const navMain = [
   {
@@ -34,11 +32,6 @@ function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
-        <Show
-          when={sidebarStore.isLoading || sidebarStore.sidebarItems.length}
-        >
-          <Separator />
-        </Show>
         <NavLocations />
       </SidebarContent>
     </Sidebar>

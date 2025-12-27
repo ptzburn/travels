@@ -9,47 +9,66 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/client/components/ui/sidebar.tsx";
-import { sidebarStore } from "~/client/stores/sidebar.ts";
 import { Show } from "solid-js";
 import { Skeleton } from "~/client/components/ui/skeleton.tsx";
+import { useLocations } from "~/client/contexts/locations.tsx";
+import { Suspense } from "solid-js";
+import { Separator } from "../../../components/ui/separator.tsx";
 
 export function NavLocations() {
+  const locations = useLocations();
+
   return (
-    <SidebarGroup>
-      <SidebarMenu>
-        <Show
-          when={!sidebarStore.isLoading}
-          fallback={
-            <For each={[0, 1, 2]}>
-              {() => (
-                <Collapsible>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <MapPin />
-                      <Skeleton height={16} width={200} radius={10} />
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </Collapsible>
-              )}
-            </For>
-          }
-        >
-          <For each={sidebarStore.sidebarItems}>
-            {(item) => (
-              <Collapsible>
-                <A href={item.url}>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip={item.title}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </A>
-              </Collapsible>
-            )}
-          </For>
-        </Show>
-      </SidebarMenu>
-    </SidebarGroup>
+    <Suspense
+      fallback={
+        <>
+          <Separator />
+          <SidebarGroup>
+            <SidebarMenu>
+              <For each={[0, 1, 2]}>
+                {() => (
+                  <Collapsible>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <MapPin />
+                        <Skeleton height={16} width={200} radius={10} />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                )}
+              </For>
+            </SidebarMenu>
+          </SidebarGroup>
+        </>
+      }
+    >
+      <Show when={locations && locations()}>
+        {(locs) => (
+          <>
+            <Show when={locs().length}>
+              <Separator />
+            </Show>
+            <SidebarGroup>
+              <SidebarMenu>
+                <For each={locs()}>
+                  {(location) => (
+                    <Collapsible>
+                      <A href="#">
+                        <SidebarMenuItem>
+                          <SidebarMenuButton tooltip={location.name}>
+                            <MapPin />
+                            <span>{location.name}</span>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </A>
+                    </Collapsible>
+                  )}
+                </For>
+              </SidebarMenu>
+            </SidebarGroup>
+          </>
+        )}
+      </Show>
+    </Suspense>
   );
 }

@@ -32,12 +32,12 @@ import { Spinner } from "~/client/components/ui/spinner.tsx";
 import LogIn from "lucide-solid/icons/log-in";
 
 export function NavUser() {
-  const { user } = useSession();
+  const session = useSession();
   const { state } = useSidebar();
 
   return (
     <Show
-      when={user()}
+      when={session()?.user}
       fallback={
         <Button onclick={signInWithGoogle} disabled={isLoading()}>
           <Show when={state() === "expanded"} fallback={<LogIn />}>

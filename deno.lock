@@ -15,6 +15,7 @@
     "npm:better-auth@^1.4.6": "1.4.6_solid-js@1.9.10__seroval@1.3.2_@better-auth+utils@0.3.0_@better-fetch+fetch@1.1.18_better-call@1.1.5__zod@4.1.13_jose@6.1.3_kysely@0.28.9_nanostores@1.1.0_@better-auth+core@1.4.6__@better-auth+utils@0.3.0__@better-fetch+fetch@1.1.18__better-call@1.1.5___zod@4.1.13__jose@6.1.3__kysely@0.28.9__nanostores@1.1.0__zod@4.1.13_zod@4.1.13",
     "npm:class-variance-authority@~0.7.1": "0.7.1",
     "npm:clsx@^2.1.1": "2.1.1",
+    "npm:embla-carousel-solid@^8.6.0": "8.6.0_solid-js@1.9.10__seroval@1.3.2_embla-carousel@8.6.0",
     "npm:hono-pino@~0.10.3": "0.10.3_hono@4.11.0_pino@10.1.0",
     "npm:hono-rate-limiter@~0.4.2": "0.4.2_hono@4.11.0",
     "npm:hono@^4.11.0": "4.11.0",
@@ -2067,6 +2068,23 @@
     },
     "electron-to-chromium@1.5.267": {
       "integrity": "sha512-0Drusm6MVRXSOJpGbaSVgcQsuB4hEkMpHXaVstcPmhu5LIedxs1xNK/nIxmQIU/RPC0+1/o0AVZfBTkTNJOdUw=="
+    },
+    "embla-carousel-reactive-utils@8.6.0_embla-carousel@8.6.0": {
+      "integrity": "sha512-fMVUDUEx0/uIEDM0Mz3dHznDhfX+znCCDCeIophYb1QGVM7YThSWX+wz11zlYwWFOr74b4QLGg0hrGPJeG2s4A==",
+      "dependencies": [
+        "embla-carousel"
+      ]
+    },
+    "embla-carousel-solid@8.6.0_solid-js@1.9.10__seroval@1.3.2_embla-carousel@8.6.0": {
+      "integrity": "sha512-xQQjPZL+CQ4n2KemoeTu0BD9mk8tkVuSMOe/GEnzKM0lAoXY/akSYBNZ4dvJDE7TMeUCAuI6D9742TTLglGq/A==",
+      "dependencies": [
+        "embla-carousel",
+        "embla-carousel-reactive-utils",
+        "solid-js"
+      ]
+    },
+    "embla-carousel@8.6.0": {
+      "integrity": "sha512-SjWyZBHJPbqxHOzckOfo8lHisEaJWmwd23XppYFYVh10bU66/Pn5tkVkbkCMZVdbUE5eTCI2nD8OyIP4Z+uwkA=="
     },
     "emoji-regex-xs@1.0.0": {
       "integrity": "sha512-LRlerrMYoIDrT6jgpeZ2YYl/L8EulRTt5hQcYjy5AInh7HWXKimpqx68aknBFpGL2+/IcogTcaydJEgaTmOpDg=="
@@ -4379,6 +4397,7 @@
         "npm:better-auth@^1.4.6",
         "npm:class-variance-authority@~0.7.1",
         "npm:clsx@^2.1.1",
+        "npm:embla-carousel-solid@^8.6.0",
         "npm:hono-pino@~0.10.3",
         "npm:hono-rate-limiter@~0.4.2",
         "npm:hono@^4.11.0",

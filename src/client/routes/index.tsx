@@ -1,13 +1,12 @@
 import { Card, CardContent } from "../components/ui/card.tsx";
 import { AuthButton } from "../components/auth-button.tsx";
-// @ts-types="solid-js"
 import { Show } from "solid-js";
 import { useSession } from "../contexts/session-context.tsx";
 import { A } from "@solidjs/router";
 import { Button } from "../components/ui/button.tsx";
 
 export default function Home() {
-  const { user } = useSession();
+  const session = useSession();
   return (
     <Card class="container mx-auto mt-4">
       <CardContent class="flex min-h-96 items-center justify-center text-center">
@@ -21,7 +20,7 @@ export default function Home() {
             journal of your journeys.
           </p>
           <Show
-            when={!user()}
+            when={!session()?.session}
             fallback={
               <A href="/dashboard">
                 <Button variant="default">

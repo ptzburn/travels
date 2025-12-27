@@ -1,8 +1,7 @@
 import { A } from "@solidjs/router";
 import CirclePlus from "lucide-solid/icons/circle-plus";
 import Map from "lucide-solid/icons/map";
-import { onMount } from "solid-js";
-import { For, Show } from "solid-js";
+import { For, Match, Suspense, Switch } from "solid-js";
 import { Button } from "~/client/components/ui/button.tsx";
 import {
   Card,
@@ -20,82 +19,95 @@ import {
 } from "~/client/components/ui/empty.tsx";
 import { Skeleton } from "~/client/components/ui/skeleton.tsx";
 import { useLocations } from "~/client/contexts/locations.tsx";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "~/client/components/ui/carousel.tsx";
 
 function DashboardPage() {
   const locations = useLocations();
 
-  onMount(() => {
-    locations?.refetch();
-  });
-
   return (
-    <div class="p-4">
-      <Show when={locations?.data.loading}>
-        <div class="flex flex-wrap mt-4 gap-2">
-          <For each={[0, 1, 2]}>
-            {() => (
-              <Card class="w-72 h-45">
-                <CardHeader>
-                  <CardTitle>
-                    <Skeleton height={20} width={200} radius={20} />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Skeleton height={15} width={200} radius={20} />
-                </CardContent>
-              </Card>
-            )}
-          </For>
-        </div>
-      </Show>
-      <Show
-        when={!locations?.data.loading &&
-          locations?.data.latest}
+    <div class="flex p-4 justify-center items-center">
+      <Suspense
+        fallback={
+          <div class="mt-4 flex flex-nowrap gap-4">
+            <For each={[0, 1, 2]}>
+              {() => (
+                <Card class="h-45 w-72">
+                  <CardHeader>
+                    <CardTitle>
+                      <Skeleton height={20} width={200} radius={20} />
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton height={15} width={200} radius={20} />
+                  </CardContent>
+                </Card>
+              )}
+            </For>
+          </div>
+        }
       >
-        {(locations) => (
-          <Show
-            when={locations().length > 0}
-            fallback={
-              <Empty>
-                <EmptyHeader>
-                  <EmptyMedia variant="icon">
-                    <Map />
-                  </EmptyMedia>
-                  <EmptyTitle>
-                    Add a location to get started
-                  </EmptyTitle>
-                  <EmptyDescription>
-                    The locations you add will be displayed here.
-                  </EmptyDescription>
-                </EmptyHeader>
-                <EmptyContent>
-                  <div class="flex flex-col gap-4 sm:flex-row sm:gap-6 justify-center">
-                    <Button as={A} href="/dashboard/add">
-                      Add Location
-                      <CirclePlus size={24} />
-                    </Button>
-                  </div>
-                </EmptyContent>
-              </Empty>
-            }
-          >
-            <div class="flex flex-wrap mt-4 gap-2">
-              <For each={locations()}>
-                {(location) => (
-                  <Card class="w-72 h-45">
-                    <CardHeader>
-                      <CardTitle>{location.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p class="truncate">{location.description}</p>
-                    </CardContent>
-                  </Card>
-                )}
-              </For>
-            </div>
-          </Show>
-        )}
-      </Show>
+        <Switch
+          fallback={
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <Map />
+                </EmptyMedia>
+                <EmptyTitle>
+                  Add a location to get started
+                </EmptyTitle>
+                <EmptyDescription>
+                  The locations you add will be displayed here.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <div class="flex flex-col justify-center gap-4 sm:flex-row sm:gap-6">
+                  <Button as={A} href="/dashboard/add">
+                    Add Location
+                    <CirclePlus size={24} />
+                  </Button>
+                </div>
+              </EmptyContent>
+            </Empty>
+          }
+        >
+          <Match when={locations && locations().length > 0 && locations()}>
+            {(locs) => (
+              <Carousel
+                opts={{
+                  align: "center",
+                }}
+                class="w-full max-w-4xl"
+              >
+                <CarouselContent>
+                  <For each={locs()}>
+                    {(location) => (
+                      <CarouselItem class="md:basis-1/2 lg:basis-1/3">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>{location.name}</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p class="truncate">{location.description}</p>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    )}
+                  </For>
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            )}
+          </Match>
+        </Switch>
+      </Suspense>
     </div>
   );
 }

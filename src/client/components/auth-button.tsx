@@ -33,10 +33,10 @@ export const signInWithGoogle = async () => {
 };
 
 export function AuthButton() {
-  const { user } = useSession();
+  const session = useSession();
   return (
     <Show
-      when={user()}
+      when={session()?.user}
       fallback={
         <Button onclick={signInWithGoogle} disabled={isLoading()}>
           Sign in with Google

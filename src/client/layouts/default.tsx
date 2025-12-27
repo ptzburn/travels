@@ -58,8 +58,7 @@ function DefaultLayout(props: RouteSectionProps) {
       <ColorModeProvider storageManager={storageManager}>
         <Suspense>
           <SessionProvider
-            session={() => session()?.session}
-            user={() => session()?.user}
+            session={session}
           >
             <LocationsProvider>
               <SidebarProvider>
@@ -94,9 +93,11 @@ function DefaultLayout(props: RouteSectionProps) {
                     <div>
                       {props.children}
                     </div>
-                    <div class="flex-1">
-                      <MapComponent />
-                    </div>
+                    <Show when={session() && location.pathname !== "/"}>
+                      <div class="flex-1">
+                        <MapComponent />
+                      </div>
+                    </Show>
                   </main>
                   <Toaster />
                 </SidebarInset>

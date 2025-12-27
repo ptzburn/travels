@@ -1,8 +1,10 @@
 import { isServer } from "solid-js/web";
 import { getRequestEvent } from "solid-js/web";
 import { rpcClient } from "~/shared/rpc-client.ts";
+import { query } from "@solidjs/router";
 
-export async function fetchLocations() {
+export const userLocationQuery = query(async () => {
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   let cookie: string;
 
   if (isServer) {
@@ -27,4 +29,4 @@ export async function fetchLocations() {
   }
 
   return await response.json();
-}
+}, "locations");

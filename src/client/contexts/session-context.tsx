@@ -1,22 +1,35 @@
-import { type Accessor, createContext, type JSX, useContext } from "solid-js";
+import { createContext, useContext } from "solid-js";
 
 import type { Session, User } from "~/shared/types.ts";
+import { AccessorWithLatest } from "@solidjs/router";
+import { ParentProps } from "solid-js";
 
-export type SessionContextValue = {
-  user: Accessor<User | undefined>;
-  session: Accessor<Session | undefined>;
-};
+const SessionContext = createContext<
+  AccessorWithLatest<
+    | {
+      session: Session;
+      user: User;
+    }
+    | null
+    | undefined
+  >
+>();
 
-const SessionContext = createContext<SessionContextValue>();
-
-export function SessionProvider(props: {
-  user: Accessor<User | undefined>;
-  session: Accessor<Session | undefined>;
-  children: JSX.Element;
-}) {
+export function SessionProvider(
+  props: ParentProps & {
+    session: AccessorWithLatest<
+      | {
+        session: Session;
+        user: User;
+      }
+      | null
+      | undefined
+    >;
+  },
+) {
   return (
     <SessionContext.Provider
-      value={{ user: props.user, session: props.session }}
+      value={props.session}
     >
       {props.children}
     </SessionContext.Provider>
