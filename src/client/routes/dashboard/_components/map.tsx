@@ -4,15 +4,11 @@ import { useColorMode } from "@kobalte/core";
 import * as maplibre from "maplibre-gl";
 import { HELSINKI_LAT_LONG } from "~/client/lib/constants.ts";
 import { createSignal, For, Show, Suspense } from "solid-js";
-import MapPin from "lucide-solid/icons/map-pin";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "~/client/components/ui/tooltip.tsx";
+
 import { useLocations } from "~/client/contexts/locations.tsx";
 import { AccessorWithLatest } from "@solidjs/router";
 import { SelectLocation } from "~/shared/types.ts";
+import { LocationPin } from "./marker.tsx";
 
 const [bounds, setBounds] = createSignal<
   maplibre.LngLatBounds | null
@@ -54,15 +50,16 @@ function MapUpdater(props: {
 
 function MapFlyer(props: {
   selectedLocation: SelectLocation | null;
+  shoudFlyTo: boolean;
 }) {
   useMapEffect((map) => {
-    if (props.selectedLocation) {
+    if (props.selectedLocation && props.shoudFlyTo) {
       map.flyTo({
         center: [props.selectedLocation.long, props.selectedLocation.lat],
         speed: 0.8,
       });
     } else if (bounds()) {
-      map.fitBounds(bounds()!);
+      map.fitBounds(bounds()!, { padding: 40 });
     }
   });
 
@@ -75,14 +72,17 @@ export const [selectedLocation, setSelectedLocation] = createSignal<
   null,
 );
 
+export const [clickedLocation, setClickedLocation] = createSignal<
+  SelectLocation | null
+>(
+  null,
+);
+
 export default function MapComponent() {
   const { colorMode } = useColorMode();
   const locations = useLocations();
-  const [clickedLocation, setClickedLocation] = createSignal<
-    SelectLocation | null
-  >(
-    null,
-  );
+
+  const [shouldFlyTo, setShouldFlyTo] = createSignal<boolean>(true);
 
   console.log(typeof maplibre.Map);
 
@@ -106,7 +106,10 @@ export default function MapComponent() {
       }}
     >
       <MapUpdater style={mapStyle()} locations={locations} />
-      <MapFlyer selectedLocation={selectedLocation()} />
+      <MapFlyer
+        selectedLocation={selectedLocation()}
+        shoudFlyTo={shouldFlyTo()}
+      />
       <Suspense fallback={null}>
         <Show when={locations && locations()}>
           {(locs) => (
@@ -116,33 +119,18 @@ export default function MapComponent() {
                   <Marker
                     position={[location.long, location.lat]}
                     element={(
-                      <div
-                        onClick={() => {
-                          if (clickedLocation() === location) {
-                            setClickedLocation(null);
-                            setTimeout(() => setClickedLocation(location), 0);
-                          } else {
-                            setClickedLocation(location);
-                          }
-                        }}
-                        onMouseEnter={() => setSelectedLocation(location)}
-                        onMouseLeave={() => setSelectedLocation(null)}
-                      >
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <MapPin
-                              size={30}
-                              class={`${
-                                selectedLocation() === location
-                                  ? "fill-info-foreground"
-                                  : "fill-primary"
-                              } text-accent hover:cursor-pointer`}
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {location.name}
-                          </TooltipContent>
-                        </Tooltip>
+                      <div>
+                        <LocationPin
+                          location={location}
+                          onHoverEnter={() => {
+                            setSelectedLocation(location);
+                            setShouldFlyTo(false);
+                          }}
+                          onHoverLeave={() => {
+                            setSelectedLocation(null);
+                            setShouldFlyTo(true);
+                          }}
+                        />
                       </div>
                     ) as HTMLElement}
                   />
