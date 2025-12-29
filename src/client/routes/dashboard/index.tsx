@@ -26,13 +26,13 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "~/client/components/ui/carousel.tsx";
-import { selectedLocation, setSelectedLocation } from "./_components/map.tsx";
+import { mapStore, setMapStore } from "~/client/stores/map.ts";
 
 function DashboardPage() {
   const locations = useLocations();
 
   return (
-    <div class="flex p-4 justify-center items-center">
+    <div class="flex items-center justify-center p-4">
       <Suspense
         fallback={
           <div class="mt-4 flex flex-nowrap gap-4">
@@ -92,12 +92,14 @@ function DashboardPage() {
                       <CarouselItem class="md:basis-1/2 lg:basis-1/3">
                         <Card
                           class={`${
-                            selectedLocation() === location
+                            mapStore.selectedLocation?._id === location._id
                               ? "border-accent-foreground"
                               : ""
                           } hover:cursor-pointer`}
-                          onMouseEnter={() => setSelectedLocation(location)}
-                          onMouseLeave={() => setSelectedLocation(null)}
+                          onMouseEnter={() =>
+                            setMapStore("selectedLocation", location)}
+                          onMouseLeave={() =>
+                            setMapStore("selectedLocation", null)}
                         >
                           <CardHeader>
                             <CardTitle>{location.name}</CardTitle>

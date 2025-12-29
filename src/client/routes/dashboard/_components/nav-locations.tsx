@@ -14,7 +14,7 @@ import { Skeleton } from "~/client/components/ui/skeleton.tsx";
 import { useLocations } from "~/client/contexts/locations.tsx";
 import { Suspense } from "solid-js";
 import { Separator } from "~/client/components/ui/separator.tsx";
-import { selectedLocation, setSelectedLocation } from "./map.tsx";
+import { mapStore, setMapStore } from "~/client/stores/map.ts";
 
 export function NavLocations() {
   const locations = useLocations();
@@ -56,11 +56,13 @@ export function NavLocations() {
                     <Collapsible>
                       <A href="#">
                         <SidebarMenuItem
-                          class={selectedLocation() === location
+                          class={mapStore.selectedLocation?._id === location._id
                             ? "bg-accent rounded"
                             : undefined}
-                          onMouseEnter={() => setSelectedLocation(location)}
-                          onMouseLeave={() => setSelectedLocation(null)}
+                          onMouseEnter={() =>
+                            setMapStore("selectedLocation", location)}
+                          onMouseLeave={() =>
+                            setMapStore("selectedLocation", null)}
                         >
                           <SidebarMenuButton
                             tooltip={location.name}

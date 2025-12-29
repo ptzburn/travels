@@ -1,29 +1,34 @@
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Map, Marker, Popup, useMapEffect } from "solid-maplibre";
+import { Map, MapsProvider, Marker, useMapEffect } from "solid-maplibre";
 import { useColorMode } from "@kobalte/core";
 import * as maplibre from "maplibre-gl";
-import { HELSINKI_LAT_LONG } from "~/client/lib/constants.ts";
-import { createSignal, For, Show, Suspense } from "solid-js";
+import {
+  CENTER_OF_FINLAND,
+  HELSINKI_LONG_LAT,
+} from "~/client/lib/constants.ts";
+import { For, onCleanup, Show, Suspense } from "solid-js";
 
 import { useLocations } from "~/client/contexts/locations.tsx";
 import { AccessorWithLatest } from "@solidjs/router";
 import { SelectLocation } from "~/shared/types.ts";
 import { LocationPin } from "./marker.tsx";
-
-const [bounds, setBounds] = createSignal<
-  maplibre.LngLatBounds | null
->(
-  null,
-);
+import { mapStore, setMapStore } from "~/client/stores/map.ts";
+import { DraggableMarker } from "./draggable-marker.tsx";
 
 function MapUpdater(props: {
-  style: string;
   locations:
     | AccessorWithLatest<SelectLocation[]>
     | undefined;
 }) {
   useMapEffect((map) => {
-    map.setStyle(props.style);
+    const { colorMode } = useColorMode();
+
+    const mapStyle = colorMode() === "dark"
+      ? "/styles/dark.json"
+      : "https://tiles.openfreemap.org/styles/liberty";
+
+    map.setStyle(mapStyle);
+    setMapStore("map", map);
 
     if (!props.locations) return;
 
@@ -40,7 +45,7 @@ function MapUpdater(props: {
       ]),
     );
 
-    setBounds(bounds);
+    setMapStore("bounds", bounds);
 
     map.fitBounds(bounds, { padding: 40 });
   });
@@ -48,116 +53,110 @@ function MapUpdater(props: {
   return null;
 }
 
-function MapFlyer(props: {
-  selectedLocation: SelectLocation | null;
-  shoudFlyTo: boolean;
-}) {
+function MapFlyer() {
   useMapEffect((map) => {
-    if (props.selectedLocation && props.shoudFlyTo) {
-      map.flyTo({
-        center: [props.selectedLocation.long, props.selectedLocation.lat],
-        speed: 0.8,
-      });
-    } else if (bounds()) {
-      map.fitBounds(bounds()!, { padding: 40 });
+    if (mapStore.addedLocation) return;
+    if (mapStore.bounds) {
+      map.fitBounds(mapStore.bounds, { padding: 40 });
     }
   });
 
   return null;
 }
 
-export const [selectedLocation, setSelectedLocation] = createSignal<
-  SelectLocation | null
->(
-  null,
-);
+function MapResizer() {
+  useMapEffect((map) => {
+    const container = map.getContainer();
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
 
-export const [clickedLocation, setClickedLocation] = createSignal<
-  SelectLocation | null
->(
-  null,
-);
+      if (mapStore.addedLocation) {
+        map.flyTo({
+          center: [mapStore.addedLocation.long, mapStore.addedLocation.lat],
+          speed: 0.8,
+          zoom: 6,
+        });
+      } else if (mapStore.bounds) {
+        map.fitBounds(mapStore.bounds, { padding: 40 });
+      }
+    });
+
+    resizeObserver.observe(container);
+
+    onCleanup(() => {
+      resizeObserver.disconnect();
+    });
+  });
+
+  return null;
+}
 
 export default function MapComponent() {
-  const { colorMode } = useColorMode();
   const locations = useLocations();
 
-  const [shouldFlyTo, setShouldFlyTo] = createSignal<boolean>(true);
-
-  console.log(typeof maplibre.Map);
-
-  const mapStyle = () =>
-    colorMode() === "dark"
-      ? "/styles/dark.json"
-      : "https://tiles.openfreemap.org/styles/liberty";
+  const updateAddedLocation = (coordinates: maplibre.LngLat) => {
+    if (mapStore.addedLocation) {
+      setMapStore("addedLocation", {
+        lat: coordinates.lat,
+        long: coordinates.lng,
+      });
+    }
+  };
 
   return (
-    <Map
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-      }}
-      options={{
-        center: HELSINKI_LAT_LONG,
-        style: mapStyle(),
-      }}
-    >
-      <MapUpdater style={mapStyle()} locations={locations} />
-      <MapFlyer
-        selectedLocation={selectedLocation()}
-        shoudFlyTo={shouldFlyTo()}
-      />
-      <Suspense fallback={null}>
-        <Show when={locations && locations()}>
-          {(locs) => (
-            <For each={locs()}>
-              {(location) => (
-                <>
+    <MapsProvider>
+      <Map
+        ondblclick={(e) => updateAddedLocation(e.lngLat)}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+        options={{
+          doubleClickZoom: false,
+          center: HELSINKI_LONG_LAT,
+        }}
+      >
+        <MapUpdater locations={locations} />
+        <MapFlyer />
+        <MapResizer />
+        <Show when={mapStore.addedLocation?._id}>
+          <Marker
+            position={mapStore.addedLocation
+              ? [mapStore.addedLocation.long, mapStore.addedLocation.lat]
+              : CENTER_OF_FINLAND}
+            draggable
+            ondrag={(e) => updateAddedLocation(e.target._lngLat)}
+            element={(
+              <div>
+                <DraggableMarker />
+              </div>
+            ) as HTMLElement}
+          />
+        </Show>
+        <Suspense fallback={null}>
+          <Show when={locations && locations()}>
+            {(locs) => (
+              <For each={locs()}>
+                {(location) => (
                   <Marker
                     position={[location.long, location.lat]}
                     element={(
                       <div>
                         <LocationPin
                           location={location}
-                          onHoverEnter={() => {
-                            setSelectedLocation(location);
-                            setShouldFlyTo(false);
-                          }}
-                          onHoverLeave={() => {
-                            setSelectedLocation(null);
-                            setShouldFlyTo(true);
-                          }}
                         />
                       </div>
                     ) as HTMLElement}
                   />
-
-                  <Show when={clickedLocation() === location}>
-                    <Popup
-                      offset={12}
-                      closeOnMove
-                      closeOnClick
-                      closeButton={false}
-                      position={[location.long, location.lat]}
-                      content={`
-                        <h3 class="text-xl text-primary">
-                          ${location.name}
-                        </h3>
-                        <p class="text-primary">
-                          ${location.description}
-                        </p>
-                      `}
-                    />
-                  </Show>
-                </>
-              )}
-            </For>
-          )}
-        </Show>
-      </Suspense>
-    </Map>
+                )}
+              </For>
+            )}
+          </Show>
+        </Suspense>
+      </Map>
+    </MapsProvider>
   );
 }

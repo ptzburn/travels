@@ -11,15 +11,23 @@ import {
   useBeforeLeave,
   useNavigate,
 } from "@solidjs/router";
-import { createSignal } from "solid-js";
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogTitle,
 } from "~/client/components/ui/alert-dialog.tsx";
-import { Show } from "solid-js";
+import {
+  createEffect,
+  createReaction,
+  createSignal,
+  onMount,
+  Show,
+} from "solid-js";
 import { addLocationAction } from "~/client/lib/actions/locations.ts";
+import { mapStore, setMapStore } from "~/client/stores/map.ts";
+import { CENTER_OF_FINLAND } from "~/client/lib/constants.ts";
+import MapPin from "lucide-solid/icons/map-pin";
 
 function AddLocationPage() {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = createSignal(false);
@@ -31,8 +39,8 @@ function AddLocationPage() {
     defaultValues: {
       name: "",
       description: "",
-      lat: 0,
-      long: 0,
+      lat: (CENTER_OF_FINLAND as [number, number])[1],
+      long: (CENTER_OF_FINLAND as [number, number])[0],
     } as InsertLocation,
     validators: {
       onBlur: InsertLocationSchema,
@@ -73,10 +81,45 @@ function AddLocationPage() {
       setNavigation(() => () => e.retry(true));
       setIsAlertDialogOpen(true);
     }
+    if (!form.state.isDirty) setMapStore("addedLocation", null);
   });
 
   const navigate = useNavigate();
 
+  onMount(() => {
+    setMapStore("addedLocation", {
+      _id: "123",
+      name: "AddedPoint",
+      description: "",
+      lat: (CENTER_OF_FINLAND as [number, number])[1],
+      long: (CENTER_OF_FINLAND as [number, number])[0],
+    });
+  });
+
+  createEffect(() => {
+    if (mapStore.addedLocation) {
+      if (form.getFieldValue("lat") !== mapStore.addedLocation.lat) {
+        form.setFieldValue("lat", mapStore.addedLocation.lat);
+      }
+      if (form.getFieldValue("long") !== mapStore.addedLocation.long) {
+        form.setFieldValue("long", mapStore.addedLocation.long);
+      }
+    }
+  });
+
+  let hasFlown: boolean = false;
+
+  createEffect(() => {
+    if (mapStore.addedLocation && mapStore.map && !hasFlown) {
+      mapStore.map.flyTo({
+        center: [mapStore.addedLocation.long, mapStore.addedLocation.lat],
+        speed: 0.8,
+        zoom: 6,
+      });
+
+      hasFlown = true;
+    }
+  });
   return (
     <div class="container mx-auto max-w-md">
       <Show when={isAlertDialogOpen()}>
@@ -95,6 +138,7 @@ function AddLocationPage() {
                 onClick={() => {
                   const retry = navigation();
                   if (retry) {
+                    setMapStore("addedLocation", null);
                     retry();
                   }
                 }}
@@ -128,27 +172,23 @@ function AddLocationPage() {
           <form.AppField name="description">
             {(field) => <field.TextArea label="Description" />}
           </form.AppField>
-          <form.AppField name="lat">
-            {(field) => (
-              <field.TextField
-                type="number"
-                max={90}
-                min={-90}
-                label="Latitude"
-              />
-            )}
-          </form.AppField>
-          <form.AppField name="long">
-            {(field) => (
-              <field.TextField
-                type="number"
-                max={90}
-                min={-90}
-                label="Longitude"
-              />
-            )}
-          </form.AppField>
         </fieldset>
+        <p class="text-sm inline-flex">
+          Drag the{" "}
+          <MapPin class="fill-success-foreground text-accent transition-colors" />
+          {" "}
+          marker to your desired location
+        </p>
+        <p class="text-sm inline-flex">
+          Or double click on the map.
+        </p>
+        <p class="text-xs text-muted-foreground inline-flex">
+          Current location:{" "}
+          {mapStore.addedLocation?.lat.toFixed(5) ?? form.getFieldValue("lat")},
+          {" "}
+          {mapStore.addedLocation?.long.toFixed(5) ??
+            form.getFieldValue("long")}
+        </p>
         <div class="flex justify-end gap-2">
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (

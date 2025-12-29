@@ -37,7 +37,7 @@ export function TextField(props: TextFieldProps) {
         type={props.type ?? "text"}
         max={props.max}
         min={props.min}
-        step={props.type === "number" ? "0.000000001" : undefined}
+        step={props.type === "number" ? "0.0000000000000000001" : undefined}
         name={field().name}
         value={field().state.value}
         onBlur={field().handleBlur}
