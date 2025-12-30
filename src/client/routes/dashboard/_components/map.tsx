@@ -129,6 +129,7 @@ export default function MapComponent() {
               : CENTER_OF_FINLAND}
             draggable
             ondrag={(e) => updateAddedLocation(e.target._lngLat)}
+            className="z-50"
             element={(
               <div>
                 <DraggableMarker />

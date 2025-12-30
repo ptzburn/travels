@@ -1,6 +1,10 @@
 import z from "zod";
 import { auth } from "./auth.ts";
-import { InsertLocationSchema } from "./schema/location.ts";
+import {
+  InsertLocationSchema,
+  NominatimResultSchema,
+} from "./schema/location.ts";
+import { SearchQuerySchema } from "./schema/search.ts";
 
 export type User = typeof auth.$Infer.Session.user;
 export type Session = typeof auth.$Infer.Session.session;
@@ -30,6 +34,9 @@ export type SelectLocations = {
 }[];
 export type InsertLocation = z.infer<typeof InsertLocationSchema>;
 
+export type SearchQuery = z.infer<typeof SearchQuerySchema>;
+
+export type NominatimResult = z.infer<typeof NominatimResultSchema>;
 // MAP
 export type LatLongItem = {
   lat: number;

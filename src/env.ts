@@ -16,6 +16,7 @@ const EnvSchema = z.object({
   MONGODB_URI: z.string(),
   DB_NAME: z.enum(["development", "test", "production"]).default("test"),
   APP_URL: z.url(),
+  CONTACT_EMAIL: z.email(),
   BETTER_AUTH_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),

@@ -17,17 +17,13 @@ import {
   AlertDialogDescription,
   AlertDialogTitle,
 } from "~/client/components/ui/alert-dialog.tsx";
-import {
-  createEffect,
-  createReaction,
-  createSignal,
-  onMount,
-  Show,
-} from "solid-js";
+import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { addLocationAction } from "~/client/lib/actions/locations.ts";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
 import { CENTER_OF_FINLAND } from "~/client/lib/constants.ts";
 import MapPin from "lucide-solid/icons/map-pin";
+import { Separator } from "~/client/components/ui/separator.tsx";
+import { LocationSearch } from "./_components/location-search.tsx";
 
 function AddLocationPage() {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = createSignal(false);
@@ -104,6 +100,12 @@ function AddLocationPage() {
       if (form.getFieldValue("long") !== mapStore.addedLocation.long) {
         form.setFieldValue("long", mapStore.addedLocation.long);
       }
+      if (
+        form.getFieldValue("name") !== mapStore.addedLocation.name &&
+        mapStore.addedLocation.name !== "AddedPoint"
+      ) {
+        form.setFieldValue("name", mapStore.addedLocation.name);
+      }
     }
   });
 
@@ -173,22 +175,30 @@ function AddLocationPage() {
             {(field) => <field.TextArea label="Description" />}
           </form.AppField>
         </fieldset>
-        <p class="text-sm inline-flex">
-          Drag the{" "}
-          <MapPin class="fill-success-foreground text-accent transition-colors" />
-          {" "}
-          marker to your desired location
-        </p>
-        <p class="text-sm inline-flex">
-          Or double click on the map.
-        </p>
         <p class="text-xs text-muted-foreground inline-flex">
-          Current location:{" "}
+          Current coordinates:{" "}
           {mapStore.addedLocation?.lat.toFixed(5) ?? form.getFieldValue("lat")},
           {" "}
           {mapStore.addedLocation?.long.toFixed(5) ??
             form.getFieldValue("long")}
         </p>
+        <p class="text-sm">To set the coordinates</p>
+        <ul class="list-disc ml-4 text-sm">
+          <li>
+            <p class="inline-flex">
+              Drag the{" "}
+              <MapPin class="fill-success-foreground text-accent transition-colors" />
+              {" "}
+              marker on the map
+            </p>
+          </li>
+          <li>
+            Double click the map.
+          </li>
+          <li>
+            Search for a location below.
+          </li>
+        </ul>
         <div class="flex justify-end gap-2">
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
@@ -208,6 +218,8 @@ function AddLocationPage() {
           </form.AppForm>
         </div>
       </form>
+      <Separator class="my-4" />
+      <LocationSearch />
     </div>
   );
 }
