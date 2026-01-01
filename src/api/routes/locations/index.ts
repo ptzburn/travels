@@ -13,6 +13,10 @@ const locations = createRouter()
     handlers.post,
   )
   .openapi(
+    routes.put,
+    handlers.put,
+  )
+  .openapi(
     routes.getOne,
     handlers.getOne,
   );

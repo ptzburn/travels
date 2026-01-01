@@ -1,4 +1,9 @@
-import { createAsync, RouteSectionProps, useLocation } from "@solidjs/router";
+import {
+  createAsync,
+  RouteSectionProps,
+  useLocation,
+  useParams,
+} from "@solidjs/router";
 import { Suspense } from "solid-js";
 import { Separator } from "../components/ui/separator.tsx";
 import { getCookie } from "vinxi/http";
@@ -51,6 +56,15 @@ function DefaultLayout(props: RouteSectionProps) {
     isServer ? getServerCookies() : document.cookie,
   );
 
+  const params = useParams<{ slug: string }>();
+
+  const EDIT_PAGES = (slug: string) =>
+    new Set([
+      "/dashboard/add",
+      `/dashboard/location/${slug}/edit`,
+      `/dashboard/location/${slug}/add`,
+    ]);
+
   const location = useLocation();
 
   const session = createAsync(() => userSessionQuery());
@@ -94,7 +108,9 @@ function DefaultLayout(props: RouteSectionProps) {
                   </header>
                   <main
                     class={`flex flex-1 ${
-                      location.pathname === "/dashboard/add"
+                      EDIT_PAGES(params.slug).has(
+                          location.pathname,
+                        )
                         ? "flex-row"
                         : "flex-col"
                     } gap-4 overflow-hidden p-4 pt-0`}

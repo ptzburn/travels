@@ -32,6 +32,7 @@ import { userLocationsQuery } from "~/client/lib/queries/locations.ts";
 function DashboardPage() {
   const locations = useLocations();
 
+  // The step below should be unnecesary in my opinion. However, without it the locations array might get mutated in a very strange way. A bug beyond my understanding.
   onMount(() => revalidate(userLocationsQuery.key));
 
   return (

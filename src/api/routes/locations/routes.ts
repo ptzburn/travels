@@ -5,6 +5,7 @@ import {
   conflictSchema,
   createErrorSchema,
   forbiddenSchema,
+  notFoundSchema,
   serverErrorSchema,
   SlugParamsSchema,
   tooManyRequestsSchema,
@@ -14,6 +15,7 @@ import * as HttpStatus from "~/shared/http-status.ts";
 import {
   InsertLocationSchema,
   SelectLocationSchema,
+  UpdateLocationSchema,
 } from "~/shared/schema/location.ts";
 import jsonContentRequired from "~/api/utils/json-content-required.ts";
 import { authMiddleware, defaultRateLimiter } from "~/api/middlewares/index.ts";
@@ -89,6 +91,56 @@ export const post = createRoute({
   },
 });
 
+export const put = createRoute({
+  summary: "PUT endpoint for updating an existing location",
+  description: "Updates the selected location in the DB and then returns it",
+  tags,
+  method: "put",
+  path: "/locations/{slug}",
+  middleware: [authMiddleware, defaultRateLimiter],
+  request: {
+    params: ParamsSchema,
+    body: jsonContentRequired(
+      UpdateLocationSchema,
+      "Location update schema",
+    ),
+  },
+  responses: {
+    [HttpStatus.OK.CODE]: jsonContent(
+      SelectLocationSchema,
+      "Locaton schema",
+    ),
+    [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
+      unauthorizedSchema,
+      "Unauthorized",
+    ),
+    [HttpStatus.FORBIDDEN.CODE]: jsonContent(
+      forbiddenSchema,
+      "Forbidden",
+    ),
+    [HttpStatus.NOT_FOUND.CODE]: jsonContent(
+      notFoundSchema,
+      "Not found",
+    ),
+    [HttpStatus.CONFLICT.CODE]: jsonContent(
+      conflictSchema,
+      "Location already exists",
+    ),
+    [HttpStatus.UNPROCESSABLE_ENTITY.CODE]: jsonContent(
+      createErrorSchema(UpdateLocationSchema).or(ParamsSchema),
+      "Validation error(s)",
+    ),
+    [HttpStatus.TOO_MANY_REQUESTS.CODE]: jsonContent(
+      tooManyRequestsSchema,
+      "Rate limit exceeded",
+    ),
+    [HttpStatus.INTERNAL_SERVER_ERROR.CODE]: jsonContent(
+      serverErrorSchema,
+      "Internal server error",
+    ),
+  },
+});
+
 export const getOne = createRoute({
   summary: "GET endpoint for fetching a location",
   description: "Fetches the location that the user has previously added",
@@ -112,6 +164,10 @@ export const getOne = createRoute({
       forbiddenSchema,
       "Forbidden",
     ),
+    [HttpStatus.NOT_FOUND.CODE]: jsonContent(
+      notFoundSchema,
+      "Not found",
+    ),
     [HttpStatus.UNPROCESSABLE_ENTITY.CODE]: jsonContent(
       createErrorSchema(ParamsSchema),
       "Validation error(s)",
@@ -129,4 +185,5 @@ export const getOne = createRoute({
 
 export type GetRoute = typeof get;
 export type PostRoute = typeof post;
+export type PutRoute = typeof put;
 export type GetOneRoute = typeof getOne;

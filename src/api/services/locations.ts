@@ -1,9 +1,10 @@
 import { Location } from "~/api/db/models/location.model.ts";
 import { customAlphabet } from "nanoid";
-import { InsertLocation } from "~/shared/types.ts";
+import { InsertLocation, UpdateLocation } from "~/shared/types.ts";
+import { LocationLogDocument } from "../db/models/location-log.model.ts";
+import { Types } from "mongoose";
 import { HTTPException } from "hono/http-exception";
 import { NOT_FOUND } from "~/shared/http-status.ts";
-import { LocationLogDocument } from "../db/models/location-log.model.ts";
 
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 5);
 
@@ -18,13 +19,25 @@ export async function findLocationBySlug(slug: string) {
     slug,
   }).populate<{ logs: LocationLogDocument[] }>("logs");
 
-  if (!location) {
+  return location;
+}
+
+export async function updateLocationById(
+  id: Types.ObjectId,
+  updates: UpdateLocation,
+) {
+  const updatedLocation = await Location.findByIdAndUpdate(id, updates)
+    .populate<
+      { logs: LocationLogDocument[] }
+    >("logs");
+
+  if (!updatedLocation) {
     throw new HTTPException(NOT_FOUND.CODE, {
       message: NOT_FOUND.MESSAGE,
     });
   }
 
-  return location;
+  return updatedLocation;
 }
 
 export async function findUniqueSlug(slug: string) {

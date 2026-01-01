@@ -4,6 +4,7 @@ import {
   InsertLocationSchema,
   NominatimResultSchema,
   SelectLocationSchema,
+  UpdateLocationSchema,
 } from "./schema/location.ts";
 import { SearchQuerySchema } from "./schema/search.ts";
 
@@ -18,6 +19,8 @@ export type SelectLocation =
     updatedAt: string;
   };
 export type InsertLocation = z.infer<typeof InsertLocationSchema>;
+
+export type UpdateLocation = z.infer<typeof UpdateLocationSchema>;
 
 export type SearchQuery = z.infer<typeof SearchQuerySchema>;
 

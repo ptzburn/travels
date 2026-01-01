@@ -8,7 +8,7 @@ import {
 
 import { userLocationsQuery } from "../lib/queries/locations.ts";
 import { useSession } from "./session-context.tsx";
-import { AccessorWithLatest, createAsync } from "@solidjs/router";
+import { AccessorWithLatest, createAsync, useLocation } from "@solidjs/router";
 import type { SelectLocation } from "~/shared/types.ts";
 import { setMapStore } from "../stores/map.ts";
 
@@ -40,8 +40,10 @@ function LocationsProviderWithSession(props: ParentProps) {
     initialValue: [],
   });
 
+  const location = useLocation();
+
   createEffect(() => {
-    if (locations) {
+    if (locations && !location.pathname.includes("location")) {
       setMapStore("locations", locations());
     }
   });

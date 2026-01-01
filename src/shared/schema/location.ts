@@ -29,6 +29,8 @@ export const InsertLocationSchema = SelectLocationSchema.omit({
   updatedAt: true,
 });
 
+export const UpdateLocationSchema = InsertLocationSchema.partial();
+
 export const NominatimResultSchema = z.object({
   place_id: z.number(),
   licence: z.string(),
