@@ -15,6 +15,7 @@ type TextFieldProps = {
   label?: string;
   description?: string;
   placeholder?: string;
+  disabled?: boolean;
 };
 
 export function TextField(props: TextFieldProps) {
@@ -49,7 +50,7 @@ export function TextField(props: TextFieldProps) {
           )}
         aria-invalid={isInvalid()}
         placeholder={props.placeholder ?? ""}
-        disabled={field().form.state.isSubmitting}
+        disabled={field().form.state.isSubmitting || props.disabled}
       />
       <Show when={props.description}>
         {(description) => (

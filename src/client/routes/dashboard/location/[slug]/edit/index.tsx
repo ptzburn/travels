@@ -1,17 +1,18 @@
-import { Show } from "solid-js";
+import { Show, Suspense } from "solid-js";
 import { LocationForm } from "~/client/components/location-form.tsx";
-import { mapStore } from "~/client/stores/map.ts";
+import { useOneLocation } from "~/client/contexts/location.tsx";
+import { LocationFormSkeleton } from "~/client/components/location-form-skeleton.tsx";
 
 function EditLocationPage() {
+  const location = useOneLocation();
+
   return (
     <div class="container mx-auto max-w-md">
-      <Show when={mapStore.locations}>
-        {(locations) => (
-          <Show when={locations().length === 1}>
-            <LocationForm initialLocation={locations()[0]} />
-          </Show>
-        )}
-      </Show>
+      <Suspense fallback={<LocationFormSkeleton />}>
+        <Show when={location?.()}>
+          {(location) => <LocationForm initialLocation={location()} />}
+        </Show>
+      </Suspense>
     </div>
   );
 }
