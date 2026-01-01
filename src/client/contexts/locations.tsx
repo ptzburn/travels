@@ -56,5 +56,11 @@ function LocationsProviderWithSession(props: ParentProps) {
 }
 
 export function useLocations() {
-  return useContext(LocationsContext);
+  const context = useContext(LocationsContext);
+
+  if (!context) {
+    throw new Error("useLocations must be used within LocationsProvider");
+  }
+
+  return context;
 }

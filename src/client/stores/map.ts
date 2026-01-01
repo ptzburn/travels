@@ -9,10 +9,12 @@ export const [mapStore, setMapStore] = createStore<
     selectedLocation: SelectLocation | null;
     addedLocation: SelectLocation | null;
     bounds: LngLatBounds | null;
+    isError: boolean;
   }
 >({
   map: null,
   selectedLocation: null,
   addedLocation: null,
   bounds: null,
+  isError: false,
 });

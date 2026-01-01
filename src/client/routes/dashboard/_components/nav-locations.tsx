@@ -22,9 +22,9 @@ export function NavLocations() {
   const locations = useLocations();
 
   const getCurrentLocations = () => {
-    if (locations && !location.pathname.includes("location")) {
+    if (locations && !location.pathname.startsWith("/dashboard/location")) {
       return locations();
-    } else if (location.pathname.includes("location")) {
+    } else if (location.pathname.startsWith("/dashboard/location")) {
       return mapStore.locations;
     }
   };
