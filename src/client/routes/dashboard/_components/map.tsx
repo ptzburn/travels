@@ -6,20 +6,13 @@ import {
   CENTER_OF_FINLAND,
   HELSINKI_LONG_LAT,
 } from "~/client/lib/constants.ts";
-import { For, onCleanup, Show, Suspense } from "solid-js";
+import { Index, onCleanup, Show, Suspense } from "solid-js";
 
-import { useLocations } from "~/client/contexts/locations.tsx";
-import { AccessorWithLatest } from "@solidjs/router";
-import { SelectLocation } from "~/shared/types.ts";
 import { LocationPin } from "./marker.tsx";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
 import { DraggableMarker } from "./draggable-marker.tsx";
 
-function MapUpdater(props: {
-  locations:
-    | AccessorWithLatest<SelectLocation[]>
-    | undefined;
-}) {
+function MapUpdater() {
   useMapEffect((map) => {
     const { colorMode } = useColorMode();
 
@@ -30,12 +23,12 @@ function MapUpdater(props: {
     map.setStyle(mapStyle);
     setMapStore("map", map);
 
-    if (!props.locations) return;
+    if (!mapStore.locations) return;
 
-    const firstPoint = props.locations()[0];
+    const firstPoint = mapStore.locations[0];
     if (!firstPoint) return;
 
-    const bounds = props.locations().reduce(
+    const bounds = mapStore.locations.reduce(
       (bounds, point) => {
         return bounds.extend([point.long, point.lat]);
       },
@@ -47,7 +40,7 @@ function MapUpdater(props: {
 
     setMapStore("bounds", bounds);
 
-    map.fitBounds(bounds, { padding: 40 });
+    map.fitBounds(bounds, { padding: 40, maxZoom: 10 });
   });
 
   return null;
@@ -57,7 +50,7 @@ function MapFlyer() {
   useMapEffect((map) => {
     if (mapStore.addedLocation) return;
     if (mapStore.bounds) {
-      map.fitBounds(mapStore.bounds, { padding: 40 });
+      map.fitBounds(mapStore.bounds, { padding: 40, maxZoom: 10 });
     }
   });
 
@@ -77,7 +70,7 @@ function MapResizer() {
           zoom: 6,
         });
       } else if (mapStore.bounds) {
-        map.fitBounds(mapStore.bounds, { padding: 40 });
+        map.fitBounds(mapStore.bounds, { padding: 40, maxZoom: 10 });
       }
     });
 
@@ -92,8 +85,6 @@ function MapResizer() {
 }
 
 export default function MapComponent() {
-  const locations = useLocations();
-
   const updateAddedLocation = (coordinates: maplibre.LngLat) => {
     if (mapStore.addedLocation) {
       setMapStore("addedLocation", {
@@ -119,7 +110,7 @@ export default function MapComponent() {
           center: HELSINKI_LONG_LAT,
         }}
       >
-        <MapUpdater locations={locations} />
+        <MapUpdater />
         <MapFlyer />
         <MapResizer />
         <Show when={mapStore.addedLocation?._id}>
@@ -138,22 +129,22 @@ export default function MapComponent() {
           />
         </Show>
         <Suspense fallback={null}>
-          <Show when={locations && locations()}>
+          <Show when={mapStore.locations}>
             {(locs) => (
-              <For each={locs()}>
+              <Index each={locs()}>
                 {(location) => (
                   <Marker
-                    position={[location.long, location.lat]}
+                    position={[location().long, location().lat]}
                     element={(
                       <div>
                         <LocationPin
-                          location={location}
+                          location={location()}
                         />
                       </div>
                     ) as HTMLElement}
                   />
                 )}
-              </For>
+              </Index>
             )}
           </Show>
         </Suspense>

@@ -1,45 +1,53 @@
-import { createContext, useContext } from "solid-js";
+import {
+  createContext,
+  createEffect,
+  ParentProps,
+  Show,
+  useContext,
+} from "solid-js";
 
-import { userLocationQuery } from "../lib/queries/locations.ts";
-import { ParentProps } from "solid-js";
+import { userLocationsQuery } from "../lib/queries/locations.ts";
 import { useSession } from "./session-context.tsx";
 import { AccessorWithLatest, createAsync } from "@solidjs/router";
+import type { SelectLocation } from "~/shared/types.ts";
+import { setMapStore } from "../stores/map.ts";
 
 const LocationsContext = createContext<
-  AccessorWithLatest<{
-    _id: string;
-    user: string;
-    name: string;
-    slug: string;
-    lat: number;
-    long: number;
-    createdAt: string;
-    updatedAt: string;
-    description?: string | undefined;
-  }[]>
+  AccessorWithLatest<SelectLocation[]>
 >();
 
 export function LocationsProvider(props: ParentProps) {
   const session = useSession();
 
-  if (!session()) {
-    return (
-      <LocationsContext.Provider
-        value={undefined}
-      >
+  return (
+    <Show
+      when={session()}
+      fallback={
+        <LocationsContext.Provider value={undefined}>
+          {props.children}
+        </LocationsContext.Provider>
+      }
+    >
+      <LocationsProviderWithSession>
         {props.children}
-      </LocationsContext.Provider>
-    );
-  }
+      </LocationsProviderWithSession>
+    </Show>
+  );
+}
 
-  const locations = createAsync(() => userLocationQuery(), {
+function LocationsProviderWithSession(props: ParentProps) {
+  const locations = createAsync(() => userLocationsQuery(), {
     initialValue: [],
   });
 
+  createEffect(() => {
+    if (locations) {
+      setMapStore("locations", locations());
+    }
+  });
+
   return (
-    <LocationsContext.Provider
-      value={locations}
-    >
+    <LocationsContext.Provider value={locations}>
       {props.children}
     </LocationsContext.Provider>
   );

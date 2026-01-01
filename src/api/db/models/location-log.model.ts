@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 
 const locationLogSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -13,4 +13,10 @@ const locationLogSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-export const LocationLog = mongoose.model("LocationLog", locationLogSchema);
+export type LocationLogDocument = InferSchemaType<typeof locationLogSchema>;
+
+export const LocationLog = mongoose.model<LocationLogDocument>(
+  "LocationLog",
+  locationLogSchema,
+  "LocationLog",
+);

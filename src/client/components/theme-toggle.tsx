@@ -4,7 +4,7 @@ import Moon from "lucide-solid/icons/moon";
 import { Show } from "solid-js";
 import { Toggle } from "./ui/toggle.tsx";
 
-export function ThemeToggle() {
+function ThemeToggle() {
   const { colorMode, setColorMode } = useColorMode();
 
   return (
@@ -21,3 +21,5 @@ export function ThemeToggle() {
     </div>
   );
 }
+
+export default ThemeToggle;

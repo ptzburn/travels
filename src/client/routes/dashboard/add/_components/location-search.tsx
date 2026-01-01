@@ -173,7 +173,7 @@ export function LocationSearch() {
                 </TextField>
 
                 <Show when={field().form.state.isSubmitting}>
-                  <div class="flex flex-col gap-2 my-4 max-h-60 overflow-auto">
+                  <div class="my-4 flex max-h-60 flex-col gap-2 overflow-auto">
                     <For each={[0, 1, 2]}>
                       {() => (
                         <Item variant="outline">
@@ -203,7 +203,7 @@ export function LocationSearch() {
 
       <Show when={searchResults()}>
         {(results) => (
-          <div class="flex flex-col gap-2 my-4 max-h-72 overflow-auto">
+          <div class="my-4 flex max-h-72 flex-col gap-2 overflow-auto">
             <For each={results()}>
               {(result) => (
                 <Item variant="outline">

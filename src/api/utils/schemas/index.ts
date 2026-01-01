@@ -2,6 +2,7 @@ export { default as conflictSchema } from "./conflict-schema.ts";
 export { default as createErrorSchema } from "./create-error-schema.ts";
 export { default as forbiddenSchema } from "./forbidden-schema.ts";
 export { default as IdParamsSchema } from "./id-params-schema.ts";
+export { default as SlugParamsSchema } from "./slug-params-schema.ts";
 export { default as ImageFileSchema } from "./image-file-schema.ts";
 export { default as notFoundSchema } from "./not-found-schema.ts";
 export { default as serverErrorSchema } from "./server-error-schema.ts";

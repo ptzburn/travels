@@ -5,6 +5,7 @@ import { LngLatBounds, Map } from "maplibre-gl";
 export const [mapStore, setMapStore] = createStore<
   {
     map: Map | null;
+    locations?: SelectLocation[];
     selectedLocation: SelectLocation | null;
     addedLocation: SelectLocation | null;
     bounds: LngLatBounds | null;

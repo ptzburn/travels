@@ -175,7 +175,7 @@ function AddLocationPage() {
             {(field) => <field.TextArea label="Description" />}
           </form.AppField>
         </fieldset>
-        <p class="text-xs text-muted-foreground inline-flex">
+        <p class="inline-flex text-muted-foreground text-xs">
           Current coordinates:{" "}
           {mapStore.addedLocation?.lat.toFixed(5) ?? form.getFieldValue("lat")},
           {" "}
@@ -183,7 +183,7 @@ function AddLocationPage() {
             form.getFieldValue("long")}
         </p>
         <p class="text-sm">To set the coordinates</p>
-        <ul class="list-disc ml-4 text-sm">
+        <ul class="ml-4 list-disc text-sm">
           <li>
             <p class="inline-flex">
               Drag the{" "}

@@ -4,7 +4,9 @@ import jsonContent from "~/api/utils/json-content.ts";
 import {
   conflictSchema,
   createErrorSchema,
+  forbiddenSchema,
   serverErrorSchema,
+  SlugParamsSchema,
   tooManyRequestsSchema,
   unauthorizedSchema,
 } from "~/api/utils/schemas/index.ts";
@@ -17,6 +19,7 @@ import jsonContentRequired from "~/api/utils/json-content-required.ts";
 import { authMiddleware, defaultRateLimiter } from "~/api/middlewares/index.ts";
 
 const tags = ["Locations"];
+const ParamsSchema = SlugParamsSchema("slug", "Location slug");
 
 export const get = createRoute({
   summary: "GET endpoint for fetching locations",
@@ -86,5 +89,44 @@ export const post = createRoute({
   },
 });
 
+export const getOne = createRoute({
+  summary: "GET endpoint for fetching a location",
+  description: "Fetches the location that the user has previously added",
+  tags,
+  method: "get",
+  path: "/locations/{slug}",
+  middleware: [authMiddleware, defaultRateLimiter],
+  request: {
+    params: ParamsSchema,
+  },
+  responses: {
+    [HttpStatus.OK.CODE]: jsonContent(
+      SelectLocationSchema,
+      "Location schema",
+    ),
+    [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
+      unauthorizedSchema,
+      "Unauthorized",
+    ),
+    [HttpStatus.FORBIDDEN.CODE]: jsonContent(
+      forbiddenSchema,
+      "Forbidden",
+    ),
+    [HttpStatus.UNPROCESSABLE_ENTITY.CODE]: jsonContent(
+      createErrorSchema(ParamsSchema),
+      "Validation error(s)",
+    ),
+    [HttpStatus.TOO_MANY_REQUESTS.CODE]: jsonContent(
+      tooManyRequestsSchema,
+      "Rate limit exceeded",
+    ),
+    [HttpStatus.INTERNAL_SERVER_ERROR.CODE]: jsonContent(
+      serverErrorSchema,
+      "Internal server error",
+    ),
+  },
+});
+
 export type GetRoute = typeof get;
 export type PostRoute = typeof post;
+export type GetOneRoute = typeof getOne;

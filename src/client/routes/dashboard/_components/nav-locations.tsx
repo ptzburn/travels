@@ -1,5 +1,5 @@
-import { For } from "solid-js";
-import { A } from "@solidjs/router";
+import { Index } from "solid-js";
+import { A, useLocation } from "@solidjs/router";
 import MapPin from "lucide-solid/icons/map-pin";
 
 import { Collapsible } from "~/client/components/ui/collapsible.tsx";
@@ -17,7 +17,17 @@ import { Separator } from "~/client/components/ui/separator.tsx";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
 
 export function NavLocations() {
+  const location = useLocation();
+
   const locations = useLocations();
+
+  const getCurrentLocations = () => {
+    if (locations && !location.pathname.includes("location")) {
+      return locations();
+    } else if (location.pathname.includes("location")) {
+      return mapStore.locations;
+    }
+  };
 
   return (
     <Suspense
@@ -26,7 +36,7 @@ export function NavLocations() {
           <Separator />
           <SidebarGroup>
             <SidebarMenu>
-              <For each={[0, 1, 2]}>
+              <Index each={[0, 1, 2]}>
                 {() => (
                   <Collapsible>
                     <SidebarMenuItem>
@@ -37,13 +47,15 @@ export function NavLocations() {
                     </SidebarMenuItem>
                   </Collapsible>
                 )}
-              </For>
+              </Index>
             </SidebarMenu>
           </SidebarGroup>
         </>
       }
     >
-      <Show when={locations && locations()}>
+      <Show
+        when={getCurrentLocations()}
+      >
         {(locs) => (
           <>
             <Show when={locs().length}>
@@ -51,30 +63,31 @@ export function NavLocations() {
             </Show>
             <SidebarGroup>
               <SidebarMenu>
-                <For each={locs()}>
+                <Index each={locs()}>
                   {(location) => (
                     <Collapsible>
-                      <A href="#">
+                      <A href={`/dashboard/location/${location().slug}`}>
                         <SidebarMenuItem
-                          class={mapStore.selectedLocation?._id === location._id
+                          class={mapStore.selectedLocation?._id ===
+                              location()._id
                             ? "bg-accent rounded"
                             : undefined}
                           onMouseEnter={() =>
-                            setMapStore("selectedLocation", location)}
+                            setMapStore("selectedLocation", location())}
                           onMouseLeave={() =>
                             setMapStore("selectedLocation", null)}
                         >
                           <SidebarMenuButton
-                            tooltip={location.name}
+                            tooltip={location().name}
                           >
                             <MapPin />
-                            <span>{location.name}</span>
+                            <span>{location().name}</span>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       </A>
                     </Collapsible>
                   )}
-                </For>
+                </Index>
               </SidebarMenu>
             </SidebarGroup>
           </>

@@ -4,7 +4,7 @@ import { HTTPException } from "hono/http-exception";
 
 import type { GetRoute } from "./routes.ts";
 import env from "~/env.ts";
-import { NominatimResult } from "../../../shared/types.ts";
+import { NominatimResult } from "~/shared/types.ts";
 
 export const get: AppRouteHandler<GetRoute> = async (c) => {
   const { q } = c.req.valid("query");

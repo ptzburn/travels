@@ -1,13 +1,15 @@
 import type { AppRouteHandler } from "~/api/lib/types.ts";
-import { OK } from "~/shared/http-status.ts";
+import { FORBIDDEN, OK } from "~/shared/http-status.ts";
+import { HTTPException } from "hono/http-exception";
 
-import type { GetRoute, PostRoute } from "./routes.ts";
+import type { GetOneRoute, GetRoute, PostRoute } from "./routes.ts";
 import { SelectLocationSchema } from "~/shared/schema/location.ts";
 import mongoose from "mongoose";
 import slugify from "slug";
 import z from "zod";
 import {
   findAllUserLocations,
+  findLocationBySlug,
   findUniqueSlug,
   insertLocation,
 } from "~/api/services/locations.ts";
@@ -40,6 +42,28 @@ export const post: AppRouteHandler<PostRoute> = async (c) => {
     user: z.instanceof(mongoose.Types.ObjectId),
   }).parse(
     newLocation,
+  );
+
+  return c.json(parsedLocation, OK.CODE);
+};
+
+export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
+  const user = c.get("user");
+  const { slug } = c.req.valid("param");
+
+  const location = await findLocationBySlug(slug);
+
+  if (location.user.toString() !== user.id) {
+    throw new HTTPException(FORBIDDEN.CODE, {
+      message: FORBIDDEN.MESSAGE,
+    });
+  }
+
+  const parsedLocation = SelectLocationSchema.extend({
+    _id: z.instanceof(mongoose.Types.ObjectId),
+    user: z.instanceof(mongoose.Types.ObjectId),
+  }).parse(
+    location,
   );
 
   return c.json(parsedLocation, OK.CODE);

@@ -1,4 +1,5 @@
 import mongoose, { InferSchemaType } from "mongoose";
+import "./location-log.model.ts";
 
 const locationSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -14,13 +15,23 @@ const locationSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
 });
 
 locationSchema.index({ user: 1, name: 1 }, { unique: true });
 
-type LocationType = InferSchemaType<typeof locationSchema>;
+locationSchema.virtual("logs", {
+  ref: "LocationLog",
+  localField: "_id",
+  foreignField: "location",
+});
 
-export const Location = mongoose.model<LocationType>(
+type LocationDocument = InferSchemaType<typeof locationSchema>;
+
+export const Location = mongoose.model<
+  LocationDocument
+>(
   "Location",
   locationSchema,
 );

@@ -146,7 +146,7 @@ const ItemTitle: Component<ComponentProps<"div">> = (props) => {
     <div
       data-slot="item-title"
       class={cn(
-        "flex w-fit items-center gap-2 text-sm leading-snug font-medium",
+        "flex w-fit items-center gap-2 font-medium text-sm leading-snug",
         local.class,
       )}
       {...others}
@@ -160,8 +160,8 @@ const ItemDescription: Component<ComponentProps<"p">> = (props) => {
     <p
       data-slot="item-description"
       class={cn(
-        "text-muted-foreground line-clamp-2 text-sm leading-normal font-normal text-balance",
-        "[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
+        "line-clamp-2 text-balance font-normal text-muted-foreground text-sm leading-normal",
+        "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
         local.class,
       )}
       {...others}

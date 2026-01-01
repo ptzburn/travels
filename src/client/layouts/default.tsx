@@ -25,9 +25,10 @@ import {
   BreadcrumbList,
 } from "../components/ui/breadcrumb.tsx";
 import { clientOnly } from "@solidjs/start";
-import { ThemeToggle } from "../components/theme-toggle.tsx";
 import { Show } from "solid-js";
 import { LocationsProvider } from "../contexts/locations.tsx";
+import { Spinner } from "../components/ui/spinner.tsx";
+import Sun from "lucide-solid/icons/sun";
 
 const MapComponent = clientOnly(() =>
   import("../routes/dashboard/_components/map.tsx")
@@ -36,6 +37,8 @@ const MapComponent = clientOnly(() =>
 const AppSidebar = clientOnly(() =>
   import("../routes/dashboard/_components/app-sidebar.tsx")
 );
+
+const ThemeToggle = clientOnly(() => import("../components/theme-toggle.tsx"));
 
 function getServerCookies() {
   "use server";
@@ -56,7 +59,7 @@ function DefaultLayout(props: RouteSectionProps) {
     <MetaProvider>
       <ColorModeScript storageType={storageManager.type} />
       <ColorModeProvider storageManager={storageManager}>
-        <Suspense>
+        <Suspense fallback={<Spinner />}>
           <SessionProvider
             session={session}
           >
@@ -87,7 +90,7 @@ function DefaultLayout(props: RouteSectionProps) {
                         </Breadcrumb>
                       </Show>
                     </div>
-                    <ThemeToggle />
+                    <ThemeToggle fallback={<Sun size={16} />} />
                   </header>
                   <main
                     class={`flex flex-1 ${

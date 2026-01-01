@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { UNPROCESSABLE_ENTITY } from "../http-status.ts";
+import { SelectLocationLogSchema } from "./location-log.ts";
 
 export const SelectLocationSchema = z.object({
   _id: z.string().regex(
@@ -15,6 +16,7 @@ export const SelectLocationSchema = z.object({
   description: z.string().trim().max(1000).optional(),
   lat: z.number().max(90).min(-90),
   long: z.number().max(180).min(-180),
+  logs: z.array(SelectLocationLogSchema).optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

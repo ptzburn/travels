@@ -21,7 +21,7 @@ const InputGroup = <T extends ValidComponent = "div">(
     <TextFieldPrimitive.Root
       data-slot="input-group"
       class={cn(
-        "group/input-group border-input dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none",
+        "group/input-group relative flex w-full items-center rounded-md border border-input shadow-xs outline-none transition-[color,box-shadow] dark:bg-input/30",
         "h-9 min-w-0 has-[>textarea]:h-auto",
         // Variants based on alignment.
         "has-[>[data-align=inline-start]]:[&>input]:pl-2",
@@ -31,7 +31,7 @@ const InputGroup = <T extends ValidComponent = "div">(
         // Focus state.
         "has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px]",
         // Error state.
-        "has-[[data-slot][aria-invalid=true]]:text-error-foreground has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-error-foreground dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40",
+        "dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 has-[[data-slot][aria-invalid=true]]:border-error-foreground has-[[data-slot][aria-invalid=true]]:text-error-foreground has-[[data-slot][aria-invalid=true]]:ring-destructive/20",
         local.class,
       )}
       {...others}
@@ -131,7 +131,7 @@ const InputGroupText: Component<ComponentProps<"span">> = (props) => {
   return (
     <span
       class={cn(
-        "text-muted-foreground flex items-center gap-2 text-sm [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        "flex items-center gap-2 text-muted-foreground text-sm [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
         local.class,
       )}
       {...others}

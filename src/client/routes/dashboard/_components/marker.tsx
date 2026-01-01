@@ -1,4 +1,5 @@
 import { createSignal, onCleanup, Show } from "solid-js";
+import { A } from "@solidjs/router";
 import { SelectLocation } from "~/shared/types.ts";
 import {
   Tooltip,
@@ -7,7 +8,8 @@ import {
 } from "~/client/components/ui/tooltip.tsx";
 import MapPin from "lucide-solid/icons/map-pin";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
-import { Popup } from "solid-maplibre";
+import { JsxPopup } from "./jsx-popup.tsx";
+import { Button } from "~/client/components/ui/button.tsx";
 
 export function LocationPin(props: {
   location: SelectLocation;
@@ -65,21 +67,27 @@ export function LocationPin(props: {
       </Tooltip>
 
       <Show when={isPopupOpen()}>
-        <Popup
+        <JsxPopup
           offset={12}
           closeOnMove={false}
           closeOnClick={false}
           closeButton={false}
           position={[props.location.long, props.location.lat]}
-          content={`
-                        <h3 class="text-xl text-primary">
-                          ${props.location.name}
-                        </h3>
-                        <p class="text-primary">
-                          ${props.location.description}
-                        </p>
-                      `}
-        />
+        >
+          <h3 class="text-xl">
+            {props.location.name}
+          </h3>
+          <p>
+            {props.location.description}
+          </p>
+          <div class="mt-2 flex justify-end">
+            <A href={`/dashboard/location/${props.location.slug}`}>
+              <Button variant="outline" size="sm">
+                View
+              </Button>
+            </A>
+          </div>
+        </JsxPopup>
       </Show>
     </div>
   );

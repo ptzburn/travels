@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-solid";
-import { For } from "solid-js";
+import { For, Show } from "solid-js";
 import { A, useLocation } from "@solidjs/router";
 
 import { Collapsible } from "~/client/components/ui/collapsible.tsx";
@@ -10,14 +10,12 @@ import {
   SidebarMenuItem,
 } from "~/client/components/ui/sidebar.tsx";
 import { useSession } from "~/client/contexts/session-context.tsx";
-import { Show } from "solid-js";
 
 type NavMainProps = {
   items: {
     title: string;
     url: string;
     icon: LucideIcon;
-    isActive?: boolean;
   }[];
 };
 
