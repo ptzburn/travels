@@ -73,63 +73,65 @@ function DefaultLayout(props: RouteSectionProps) {
     <MetaProvider>
       <ColorModeScript storageType={storageManager.type} />
       <ColorModeProvider storageManager={storageManager}>
-        <Suspense fallback={<Spinner />}>
-          <SessionProvider
-            session={session}
-          >
-            <LocationsProvider>
-              <SidebarProvider>
-                <Show when={session()?.user}>
-                  <AppSidebar />
-                </Show>
-                <SidebarInset class="flex h-screen flex-col overflow-hidden">
-                  <header class="mr-4 flex h-16 shrink-0 items-center justify-between">
-                    <div class="flex items-center gap-2 px-4">
-                      <Show when={session()?.user}>
-                        <SidebarTrigger class="-ml-1" />
-                        <Separator
-                          orientation="vertical"
-                          class="mr-2 data-[orientation=vertical]:h-4"
-                        />
-                        <Breadcrumb>
-                          <BreadcrumbList>
-                            <BreadcrumbItem class="hidden md:block">
-                              <BreadcrumbLink href={location.pathname}>
-                                {location.pathname === "/dashboard"
-                                  ? "Locations"
-                                  : "Add location"}
-                              </BreadcrumbLink>
-                            </BreadcrumbItem>
-                          </BreadcrumbList>
-                        </Breadcrumb>
-                      </Show>
-                    </div>
-                    <ThemeToggle fallback={<Sun size={16} />} />
-                  </header>
-                  <main
-                    class={`flex flex-1 ${
-                      EDIT_PAGES(params.slug).has(
-                          location.pathname,
-                        )
-                        ? "flex-row"
-                        : "flex-col"
-                    } gap-4 overflow-hidden p-4 pt-0`}
-                  >
-                    <div class="shrink-0">
-                      {props.children}
-                    </div>
-                    <Show when={session() && location.pathname !== "/"}>
-                      <div class="relative min-h-0 flex-1 overflow-hidden rounded-xl">
-                        <MapComponent />
+        <div class="flex h-screen">
+          <Suspense fallback={<Spinner />}>
+            <SessionProvider
+              session={session}
+            >
+              <LocationsProvider>
+                <SidebarProvider>
+                  <Show when={session()?.user}>
+                    <AppSidebar />
+                  </Show>
+                  <SidebarInset class="flex flex-1 flex-col overflow-hidden">
+                    <header class="mr-4 flex h-16 shrink-0 items-center justify-between">
+                      <div class="flex items-center gap-2 px-4">
+                        <Show when={session()?.user}>
+                          <SidebarTrigger class="-ml-1" />
+                          <Separator
+                            orientation="vertical"
+                            class="mr-2 data-[orientation=vertical]:h-4"
+                          />
+                          <Breadcrumb>
+                            <BreadcrumbList>
+                              <BreadcrumbItem class="hidden md:block">
+                                <BreadcrumbLink href={location.pathname}>
+                                  {location.pathname === "/dashboard"
+                                    ? "Locations"
+                                    : "Add location"}
+                                </BreadcrumbLink>
+                              </BreadcrumbItem>
+                            </BreadcrumbList>
+                          </Breadcrumb>
+                        </Show>
                       </div>
-                    </Show>
-                  </main>
-                  <Toaster />
-                </SidebarInset>
-              </SidebarProvider>
-            </LocationsProvider>
-          </SessionProvider>
-        </Suspense>
+                      <ThemeToggle fallback={<Sun size={16} />} />
+                    </header>
+                    <main
+                      class={`flex flex-1 ${
+                        EDIT_PAGES(params.slug).has(
+                            location.pathname,
+                          )
+                          ? "flex-row"
+                          : "flex-col"
+                      } gap-4 overflow-auto p-4 pt-0`}
+                    >
+                      <div class="shrink-0">
+                        {props.children}
+                      </div>
+                      <Show when={session() && location.pathname !== "/"}>
+                        <div class="relative min-h-0 flex-1 overflow-hidden rounded-xl">
+                          <MapComponent />
+                        </div>
+                      </Show>
+                    </main>
+                    <Toaster />
+                  </SidebarInset>
+                </SidebarProvider>
+              </LocationsProvider>
+            </SessionProvider>
+          </Suspense>
+        </div>
       </ColorModeProvider>
     </MetaProvider>
   );

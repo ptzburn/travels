@@ -19,6 +19,10 @@ const locations = createRouter()
   .openapi(
     routes.getOne,
     handlers.getOne,
+  )
+  .openapi(
+    routes.remove,
+    handlers.remove,
   );
 
 export default locations;

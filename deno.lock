@@ -2,6 +2,7 @@
   "version": "5",
   "specifiers": {
     "jsr:@ryu/deno-lint-plugin-tailwindcss@0.2.0": "0.2.0",
+    "npm:@corvu/calendar@~0.1.2": "0.1.2_solid-js@1.9.10__seroval@1.3.2",
     "npm:@hono/zod-openapi@^1.1.5": "1.1.5_hono@4.11.0_zod@4.1.13",
     "npm:@kobalte/core@~0.13.11": "0.13.11_solid-js@1.9.10__seroval@1.3.2",
     "npm:@kobalte/tailwindcss@0.9": "0.9.0_tailwindcss@4.1.18",
@@ -308,6 +309,13 @@
       "integrity": "sha512-Nu8ahitGFFJztxUml9oD/DLb7Z28C8cd8F46IVQ7y5Btz575pvMY8AqZsXkX7Gds29eCKdMgIHjIvzskHgPSFg==",
       "dependencies": [
         "mime@3.0.0"
+      ]
+    },
+    "@corvu/calendar@0.1.2_solid-js@1.9.10__seroval@1.3.2": {
+      "integrity": "sha512-Vbdns1iNNI0WTIwDZS7m9pHWtr/YTz7yrisXhHUCfl4mxDvb9W8MMmun651wiEjhL7+OrcNbbl2kTOmYSFIf4g==",
+      "dependencies": [
+        "@corvu/utils",
+        "solid-js"
       ]
     },
     "@corvu/utils@0.4.2_solid-js@1.9.10__seroval@1.3.2": {
@@ -4384,6 +4392,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@corvu/calendar@~0.1.2",
         "npm:@hono/zod-openapi@^1.1.5",
         "npm:@kobalte/core@~0.13.11",
         "npm:@kobalte/tailwindcss@0.9",

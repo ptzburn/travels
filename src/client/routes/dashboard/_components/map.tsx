@@ -11,7 +11,7 @@ import { Index, onCleanup, Show, Suspense } from "solid-js";
 import { LocationPin } from "./marker.tsx";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
 import { DraggableMarker } from "./draggable-marker.tsx";
-import { useLocations } from "../../../contexts/locations.tsx";
+import { useLocations } from "~/client/contexts/locations.tsx";
 
 function MapUpdater() {
   const locations = useLocations();
@@ -62,7 +62,7 @@ function MapResizer() {
         map.flyTo({
           center: [mapStore.addedLocation.long, mapStore.addedLocation.lat],
           speed: 0.8,
-          zoom: 6,
+          zoom: mapStore.addedLocation.zoom ?? 6,
         });
       } else if (mapStore.bounds) {
         map.fitBounds(mapStore.bounds, { padding: 40, maxZoom: 10 });

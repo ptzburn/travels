@@ -1,21 +1,21 @@
 import { z } from "zod";
-import { UNPROCESSABLE_ENTITY } from "../http-status.ts";
 import { SelectLocationLogSchema } from "./location-log.ts";
+import {
+  DescriptionSchema,
+  IdSchema,
+  LatSchema,
+  LongSchema,
+  NameSchema,
+} from "./utils.ts";
 
 export const SelectLocationSchema = z.object({
-  _id: z.string().regex(
-    /^[0-9a-f]{24}$/i,
-    UNPROCESSABLE_ENTITY.INVALID_ID_MESSAGE,
-  ),
-  user: z.string().regex(
-    /^[0-9a-f]{24}$/i,
-    UNPROCESSABLE_ENTITY.INVALID_ID_MESSAGE,
-  ),
-  name: z.string().trim().min(2),
+  _id: IdSchema,
+  user: IdSchema,
+  name: NameSchema,
   slug: z.string(),
-  description: z.string().trim().max(1000).optional(),
-  lat: z.number().max(90).min(-90),
-  long: z.number().max(180).min(-180),
+  description: DescriptionSchema,
+  lat: LatSchema,
+  long: LongSchema,
   logs: z.array(SelectLocationLogSchema).optional(),
   createdAt: z.date(),
   updatedAt: z.date(),

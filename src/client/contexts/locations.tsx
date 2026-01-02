@@ -95,7 +95,7 @@ function LocationProviderWithSession(props: ParentProps) {
             ? error.message
             : "Server Error";
           return (
-            <Empty class="from-muted/50 to-background h-full bg-gradient-to-b from-30%">
+            <Empty class="h-dvh h-full bg-gradient-to-b from-30% from-muted/50 to-background">
               <EmptyHeader>
                 <EmptyTitle>{errorCode} - {errorMessage}</EmptyTitle>
                 <Show when={errorCode === NOT_FOUND.CODE}>

@@ -1,18 +1,26 @@
 import type { AppRouteHandler } from "~/api/lib/types.ts";
 import {
   FORBIDDEN,
+  NO_CONTENT,
   NOT_FOUND,
   OK,
   UNPROCESSABLE_ENTITY,
 } from "~/shared/http-status.ts";
 import { HTTPException } from "hono/http-exception";
 
-import type { GetOneRoute, GetRoute, PostRoute, PutRoute } from "./routes.ts";
+import type {
+  GetOneRoute,
+  GetRoute,
+  PostRoute,
+  PutRoute,
+  RemoveRoute,
+} from "./routes.ts";
 import { SelectLocationSchema } from "~/shared/schema/location.ts";
 import mongoose from "mongoose";
 import slugify from "slug";
 import z from "zod";
 import {
+  deleteLocationById,
   findAllUserLocations,
   findLocationBySlug,
   findUniqueSlug,
@@ -116,4 +124,27 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
   );
 
   return c.json(parsedLocation, OK.CODE);
+};
+
+export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
+  const { slug } = c.req.valid("param");
+  const user = c.get("user");
+
+  const location = await findLocationBySlug(slug);
+
+  if (!location) {
+    throw new HTTPException(NOT_FOUND.CODE, {
+      message: NOT_FOUND.MESSAGE,
+    });
+  }
+
+  if (location.user.toString() !== user.id) {
+    throw new HTTPException(FORBIDDEN.CODE, {
+      message: FORBIDDEN.MESSAGE,
+    });
+  }
+
+  await deleteLocationById(location._id);
+
+  return c.body(null, NO_CONTENT.CODE);
 };

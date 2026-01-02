@@ -38,3 +38,27 @@ export const updateLocationAction = action(
   },
   "addLocation",
 );
+
+export const deleteLocationAction = action(
+  async (slug: string) => {
+    const response = await rpcClient.locations[":slug"].$delete({
+      param: { slug },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      if ("message" in error) {
+        throw new Error(error.message, { cause: response.status });
+      }
+      if ("errors" in error) {
+        const errorMessages = error.errors.map((e) => Object.values(e))
+          .flat().join(", ");
+        throw new Error(errorMessages, { cause: response.status });
+      }
+      throw new Error("Unknown error");
+    }
+
+    return;
+  },
+  "addLocation",
+);
