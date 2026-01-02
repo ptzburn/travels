@@ -5,7 +5,6 @@ import { query } from "@solidjs/router";
 import { SearchQuery } from "~/shared/types.ts";
 
 export const userLocationsQuery = query(async () => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   let cookie: string;
 
   if (isServer) {
@@ -33,7 +32,6 @@ export const userLocationsQuery = query(async () => {
 }, "locations");
 
 export const userLocationQuery = query(async (slug: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   let cookie: string;
 
   if (isServer) {
@@ -67,7 +65,9 @@ export const userLocationQuery = query(async (slug: string) => {
     throw new Error(error.message, { cause: response.status });
   }
 
-  return await response.json();
+  const json = await response.json();
+
+  return [json];
 }, "location");
 
 export const locationSearchQuery = query(async (query: SearchQuery) => {

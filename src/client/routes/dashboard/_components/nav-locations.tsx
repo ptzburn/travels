@@ -1,5 +1,5 @@
 import { Index } from "solid-js";
-import { A, useLocation } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import MapPin from "lucide-solid/icons/map-pin";
 
 import { Collapsible } from "~/client/components/ui/collapsible.tsx";
@@ -17,17 +17,7 @@ import { Separator } from "~/client/components/ui/separator.tsx";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
 
 export function NavLocations() {
-  const location = useLocation();
-
   const locations = useLocations();
-
-  const getCurrentLocations = () => {
-    if (locations && !location.pathname.startsWith("/dashboard/location")) {
-      return locations();
-    } else if (location.pathname.startsWith("/dashboard/location")) {
-      return mapStore.locations;
-    }
-  };
 
   return (
     <Suspense
@@ -53,45 +43,36 @@ export function NavLocations() {
         </>
       }
     >
-      <Show
-        when={getCurrentLocations()}
-      >
-        {(locs) => (
-          <>
-            <Show when={locs().length}>
-              <Separator />
-            </Show>
-            <SidebarGroup>
-              <SidebarMenu>
-                <Index each={locs()}>
-                  {(location) => (
-                    <Collapsible>
-                      <A href={`/dashboard/location/${location().slug}`}>
-                        <SidebarMenuItem
-                          class={mapStore.selectedLocation?._id ===
-                              location()._id
-                            ? "bg-accent rounded"
-                            : undefined}
-                          onMouseEnter={() =>
-                            setMapStore("selectedLocation", location())}
-                          onMouseLeave={() =>
-                            setMapStore("selectedLocation", null)}
-                        >
-                          <SidebarMenuButton
-                            tooltip={location().name}
-                          >
-                            <MapPin />
-                            <span>{location().name}</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      </A>
-                    </Collapsible>
-                  )}
-                </Index>
-              </SidebarMenu>
-            </SidebarGroup>
-          </>
-        )}
+      <Show when={locations().length > 0}>
+        <Separator />
+        <SidebarGroup>
+          <SidebarMenu>
+            <Index each={locations()}>
+              {(location) => (
+                <Collapsible>
+                  <A href={`/dashboard/location/${location().slug}`}>
+                    <SidebarMenuItem
+                      class={mapStore.selectedLocation?._id ===
+                          location()._id
+                        ? "bg-accent rounded"
+                        : undefined}
+                      onMouseEnter={() =>
+                        setMapStore("selectedLocation", location())}
+                      onMouseLeave={() => setMapStore("selectedLocation", null)}
+                    >
+                      <SidebarMenuButton
+                        tooltip={location().name}
+                      >
+                        <MapPin />
+                        <span>{location().name}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </A>
+                </Collapsible>
+              )}
+            </Index>
+          </SidebarMenu>
+        </SidebarGroup>
       </Show>
     </Suspense>
   );

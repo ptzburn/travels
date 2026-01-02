@@ -11,24 +11,19 @@ import { Index, onCleanup, Show, Suspense } from "solid-js";
 import { LocationPin } from "./marker.tsx";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
 import { DraggableMarker } from "./draggable-marker.tsx";
+import { useLocations } from "../../../contexts/locations.tsx";
 
 function MapUpdater() {
+  const locations = useLocations();
+
   useMapEffect((map) => {
-    const { colorMode } = useColorMode();
-
-    const mapStyle = colorMode() === "dark"
-      ? "/styles/dark.json"
-      : "https://tiles.openfreemap.org/styles/liberty";
-
-    map.setStyle(mapStyle);
     setMapStore("map", map);
 
-    if (!mapStore.locations) return;
+    if (locations().length < 1) return;
 
-    const firstPoint = mapStore.locations[0];
-    if (!firstPoint) return;
+    const firstPoint = locations()[0];
 
-    const bounds = mapStore.locations.reduce(
+    const bounds = locations().reduce(
       (bounds, point) => {
         return bounds.extend([point.long, point.lat]);
       },
@@ -94,6 +89,14 @@ export default function MapComponent() {
     }
   };
 
+  const { colorMode } = useColorMode();
+
+  const mapStyle = colorMode() === "dark"
+    ? "/styles/dark.json"
+    : "https://tiles.openfreemap.org/styles/liberty";
+
+  const locations = useLocations();
+
   return (
     <MapsProvider>
       <Map
@@ -108,6 +111,7 @@ export default function MapComponent() {
         options={{
           doubleClickZoom: false,
           center: HELSINKI_LONG_LAT,
+          style: mapStyle,
         }}
       >
         <MapUpdater />
@@ -129,23 +133,21 @@ export default function MapComponent() {
           />
         </Show>
         <Suspense fallback={null}>
-          <Show when={mapStore.locations}>
-            {(locs) => (
-              <Index each={locs()}>
-                {(location) => (
-                  <Marker
-                    position={[location().long, location().lat]}
-                    element={(
-                      <div>
-                        <LocationPin
-                          location={location()}
-                        />
-                      </div>
-                    ) as HTMLElement}
-                  />
-                )}
-              </Index>
-            )}
+          <Show when={locations().length > 0}>
+            <Index each={locations()}>
+              {(location) => (
+                <Marker
+                  position={[location().long, location().lat]}
+                  element={(
+                    <div>
+                      <LocationPin
+                        location={location()}
+                      />
+                    </div>
+                  ) as HTMLElement}
+                />
+              )}
+            </Index>
           </Show>
         </Suspense>
       </Map>

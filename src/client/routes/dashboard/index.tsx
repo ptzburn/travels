@@ -1,7 +1,7 @@
-import { A, revalidate } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import CirclePlus from "lucide-solid/icons/circle-plus";
 import Map from "lucide-solid/icons/map";
-import { Index, Match, onMount, Suspense, Switch } from "solid-js";
+import { Index, Match, Suspense, Switch } from "solid-js";
 import { Button } from "~/client/components/ui/button.tsx";
 import {
   Card,
@@ -27,13 +27,9 @@ import {
   CarouselPrevious,
 } from "~/client/components/ui/carousel.tsx";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
-import { userLocationsQuery } from "~/client/lib/queries/locations.ts";
 
 function DashboardPage() {
   const locations = useLocations();
-
-  // The step below should be unnecesary in my opinion. However, without it the locations array might get mutated in a very strange way. A bug beyond my understanding.
-  onMount(() => revalidate(userLocationsQuery.key));
 
   return (
     <div class="flex min-h-64 items-center justify-center p-4">
