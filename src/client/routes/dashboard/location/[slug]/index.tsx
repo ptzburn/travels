@@ -1,4 +1,4 @@
-import { createSignal, Show } from "solid-js";
+import { createSignal, Show, Suspense } from "solid-js";
 import {
   Empty,
   EmptyContent,
@@ -34,6 +34,7 @@ import {
 import { deleteLocationAction } from "~/client/lib/actions/locations.ts";
 import { toast } from "solid-sonner";
 import { Spinner } from "~/client/components/ui/spinner.tsx";
+import { LocationCarousel } from "~/client/components/location-carousel.tsx";
 
 function LocationPage() {
   const location = useLocations();
@@ -57,103 +58,110 @@ function LocationPage() {
     }
   };
   return (
-    <Show when={location().length === 1}>
-      <div>
-        <h2 class="flex flex-row gap-4 text-xl">
-          {location()[0].name}
-          {
-            <DropdownMenu>
-              <DropdownMenuTrigger class="hover:cursor-pointer">
-                <EllipsisVertical size={16} />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
-                  <Trash2 size={16} />
-                  Delete
-                </DropdownMenuItem>
-                <A href={`/dashboard/location/${location()[0].slug}/edit`}>
-                  <DropdownMenuItem>
-                    <SquarePen size={16} />
-                    Edit
+    <Suspense fallback={<Spinner />}>
+      <Show when={location().length === 1}>
+        <div>
+          <h2 class="flex flex-row gap-4 text-xl">
+            {location()[0].name}
+            {
+              <DropdownMenu>
+                <DropdownMenuTrigger class="hover:cursor-pointer">
+                  <EllipsisVertical size={16} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
+                    <Trash2 size={16} />
+                    Delete
                   </DropdownMenuItem>
-                </A>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          }
-        </h2>
-        <p class="text-sm">{location()[0].description}</p>
-        <Show when={location()[0].logs}>
-          {(logs) => (
-            <Show
-              when={logs().length}
-              fallback={
-                <Empty>
-                  <EmptyHeader>
-                    <EmptyMedia variant="icon">
-                      <ScrollText />
-                    </EmptyMedia>
-                    <EmptyTitle>
-                      No logs found
-                    </EmptyTitle>
-                    <EmptyDescription>
-                      Add a location log to get started.
-                    </EmptyDescription>
-                  </EmptyHeader>
-                  <EmptyContent>
-                    <div class="flex flex-col justify-center gap-4 sm:flex-row sm:gap-6">
-                      <Button as={A} href="/dashboard/add">
-                        Add Location Log
-                        <MapPinPlus size={24} />
-                      </Button>
-                    </div>
-                  </EmptyContent>
-                </Empty>
-              }
-            >
-              <p>{logs().length}</p>
-            </Show>
-          )}
-        </Show>
-      </div>
-      <Dialog
-        open={isDialogOpen()}
-        onOpenChange={deleteLocationSubmission.pending
-          ? undefined
-          : setIsDialogOpen}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you sure absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete the
-              location and remove its data from our servers.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              disabled={deleteLocationSubmission.pending}
-              onClick={() => setIsDialogOpen(false)}
-            >
-              Close
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={deleteLocationSubmission.pending}
-              onClick={() => handleDelete(location()[0].slug)}
-            >
-              Delete
+                  <A href={`/dashboard/location/${location()[0].slug}/edit`}>
+                    <DropdownMenuItem>
+                      <SquarePen size={16} />
+                      Edit
+                    </DropdownMenuItem>
+                  </A>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            }
+          </h2>
+          <p class="text-sm">{location()[0].description}</p>
+          <Show when={location()[0].logs}>
+            {(logs) => (
               <Show
-                when={!deleteLocationSubmission.pending}
-                fallback={<Spinner />}
+                when={logs().length}
+                fallback={
+                  <Empty>
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">
+                        <ScrollText />
+                      </EmptyMedia>
+                      <EmptyTitle>
+                        No logs found
+                      </EmptyTitle>
+                      <EmptyDescription>
+                        Add a location log to get started.
+                      </EmptyDescription>
+                    </EmptyHeader>
+                    <EmptyContent>
+                      <div class="flex flex-col justify-center gap-4 sm:flex-row sm:gap-6">
+                        <Button
+                          as={A}
+                          href={`/dashboard/location/${location()[0].slug}/add`}
+                        >
+                          Add Location Log
+                          <MapPinPlus size={24} />
+                        </Button>
+                      </div>
+                    </EmptyContent>
+                  </Empty>
+                }
               >
-                <Trash2 />
+                <div class="flex min-h-64 items-center justify-center p-4">
+                  <LocationCarousel locations={logs()} />
+                </div>
               </Show>
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </Show>
+            )}
+          </Show>
+        </div>
+        <Dialog
+          open={isDialogOpen()}
+          onOpenChange={deleteLocationSubmission.pending
+            ? undefined
+            : setIsDialogOpen}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete the
+                location and remove its data from our servers.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                disabled={deleteLocationSubmission.pending}
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Close
+              </Button>
+              <Button
+                variant="destructive"
+                disabled={deleteLocationSubmission.pending}
+                onClick={() => handleDelete(location()[0].slug)}
+              >
+                Delete
+                <Show
+                  when={!deleteLocationSubmission.pending}
+                  fallback={<Spinner />}
+                >
+                  <Trash2 />
+                </Show>
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </Show>
+    </Suspense>
   );
 }
 

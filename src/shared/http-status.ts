@@ -296,14 +296,8 @@ export const NOT_ACCEPTABLE = {
 export const NOT_FOUND = {
   CODE: 404 as const,
   MESSAGE: "Not Found",
-  JOB_MESSAGE: "Job not found",
-  TALENT_MESSAGE: "Talent not found",
-  SCHEDULE_MESSAGE: "Schedule not found",
-  CHAT_MESSAGE: "Chat not found",
-  CONTRACT_MESSAGE: "Contract not found",
-  INTERVIEW_MESSAGE: "Interview not found",
-  PROJECT_MESSAGE: "Project not found",
-  AVATAR_MESSAGE: "Avatar not found",
+  LOCATION_MESSAGE: "Location not found",
+  LOCATION_LOG_MESSAGE: "Location log not found",
 };
 
 /**

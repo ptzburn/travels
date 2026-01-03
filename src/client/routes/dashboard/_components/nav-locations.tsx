@@ -1,5 +1,5 @@
-import { Index } from "solid-js";
-import { A } from "@solidjs/router";
+import { Index, Suspense } from "solid-js";
+import { A, useLocation, useParams } from "@solidjs/router";
 import MapPin from "lucide-solid/icons/map-pin";
 
 import { Collapsible } from "~/client/components/ui/collapsible.tsx";
@@ -9,15 +9,43 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/client/components/ui/sidebar.tsx";
-import { Show } from "solid-js";
 import { Skeleton } from "~/client/components/ui/skeleton.tsx";
 import { useLocations } from "~/client/contexts/locations.tsx";
-import { Suspense } from "solid-js";
 import { Separator } from "~/client/components/ui/separator.tsx";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
+import { MAIN_PAGES } from "~/client/lib/constants.ts";
+import {
+  getLocationHref,
+  hasSlugAndId,
+  hasSlugAndNotId,
+} from "~/client/lib/utils.ts";
 
 export function NavLocations() {
+  const location = useLocation();
+  const params = useParams();
+
   const locations = useLocations();
+
+  const navItems = () => {
+    if (MAIN_PAGES.has(location.pathname)) return locations();
+    if (hasSlugAndNotId(params.slug, params.id)) {
+      const logs = () =>
+        locations().find((loc) => loc.slug === params.slug)?.logs;
+      return logs() ?? [];
+    }
+    if (hasSlugAndId(params.slug, params.id)) {
+      const logs = () =>
+        locations().find((loc) => loc.slug === params.slug)?.logs;
+
+      const log = () => {
+        const currentLogs = logs();
+        if (!currentLogs || currentLogs.length < 1) return;
+        return currentLogs.filter((log) => log._id === params.id);
+      };
+      return log() ?? [];
+    }
+    return [];
+  };
 
   return (
     <Suspense
@@ -43,37 +71,35 @@ export function NavLocations() {
         </>
       }
     >
-      <Show when={locations().length > 0}>
-        <Separator />
-        <SidebarGroup>
-          <SidebarMenu>
-            <Index each={locations()}>
-              {(location) => (
-                <Collapsible>
-                  <A href={`/dashboard/location/${location().slug}`}>
-                    <SidebarMenuItem
-                      class={mapStore.selectedLocation?._id ===
-                          location()._id
-                        ? "bg-accent rounded"
-                        : undefined}
-                      onMouseEnter={() =>
-                        setMapStore("selectedLocation", location())}
-                      onMouseLeave={() => setMapStore("selectedLocation", null)}
+      <Separator />
+      <SidebarGroup>
+        <SidebarMenu>
+          <Index each={navItems()}>
+            {(location) => (
+              <Collapsible>
+                <A href={getLocationHref(location(), params.slug)}>
+                  <SidebarMenuItem
+                    class={mapStore.selectedLocation?._id ===
+                        location()._id
+                      ? "bg-accent rounded"
+                      : undefined}
+                    onMouseEnter={() =>
+                      setMapStore("selectedLocation", location())}
+                    onMouseLeave={() => setMapStore("selectedLocation", null)}
+                  >
+                    <SidebarMenuButton
+                      tooltip={location().name}
                     >
-                      <SidebarMenuButton
-                        tooltip={location().name}
-                      >
-                        <MapPin />
-                        <span>{location().name}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </A>
-                </Collapsible>
-              )}
-            </Index>
-          </SidebarMenu>
-        </SidebarGroup>
-      </Show>
+                      <MapPin />
+                      <span class="truncate">{location().name}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </A>
+              </Collapsible>
+            )}
+          </Index>
+        </SidebarMenu>
+      </SidebarGroup>
     </Suspense>
   );
 }

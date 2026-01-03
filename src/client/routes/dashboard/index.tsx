@@ -19,14 +19,7 @@ import {
 } from "~/client/components/ui/empty.tsx";
 import { Skeleton } from "~/client/components/ui/skeleton.tsx";
 import { useLocations } from "~/client/contexts/locations.tsx";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "~/client/components/ui/carousel.tsx";
-import { mapStore, setMapStore } from "~/client/stores/map.ts";
+import { LocationCarousel } from "~/client/components/location-carousel.tsx";
 
 function DashboardPage() {
   const locations = useLocations();
@@ -79,45 +72,7 @@ function DashboardPage() {
           }
         >
           <Match when={locations && locations()?.length > 0 && locations()}>
-            {(locs) => (
-              <Carousel
-                opts={{
-                  align: "center",
-                }}
-                class="w-full max-w-4xl"
-              >
-                <CarouselContent>
-                  <Index each={locs()}>
-                    {(location) => (
-                      <CarouselItem class="md:basis-1/2 lg:basis-1/3">
-                        <A href={`/dashboard/location/${location().slug}`}>
-                          <Card
-                            class={`${
-                              mapStore.selectedLocation?._id === location()._id
-                                ? "border-accent-foreground"
-                                : ""
-                            } hover:cursor-pointer`}
-                            onMouseEnter={() =>
-                              setMapStore("selectedLocation", location())}
-                            onMouseLeave={() =>
-                              setMapStore("selectedLocation", null)}
-                          >
-                            <CardHeader>
-                              <CardTitle>{location().name}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p class="truncate">{location().description}</p>
-                            </CardContent>
-                          </Card>
-                        </A>
-                      </CarouselItem>
-                    )}
-                  </Index>
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
-            )}
+            {(locs) => <LocationCarousel locations={locs()} />}
           </Match>
         </Switch>
       </Suspense>

@@ -1,6 +1,6 @@
 import { createSignal, onCleanup, Show } from "solid-js";
-import { A } from "@solidjs/router";
-import { SelectLocation } from "~/shared/types.ts";
+import { A, useParams } from "@solidjs/router";
+import { SelectLocation, SelectLocationLog } from "~/shared/types.ts";
 import {
   Tooltip,
   TooltipContent,
@@ -12,10 +12,17 @@ import { JsxPopup } from "./jsx-popup.tsx";
 import { Button } from "~/client/components/ui/button.tsx";
 
 export function LocationPin(props: {
-  location: SelectLocation;
+  location: SelectLocation | SelectLocationLog;
 }) {
   const [isConnected, setIsConnected] = createSignal(false);
   const [isPopupOpen, setIsPopupOpen] = createSignal(false);
+
+  const params = useParams<{ slug: string }>();
+
+  const getLocationHref = (loc: SelectLocation | SelectLocationLog) =>
+    "slug" in loc
+      ? `/dashboard/location/${loc.slug}`
+      : `/dashboard/location/${params.slug}/${loc._id}`;
 
   const isHovered = () => mapStore.selectedLocation?._id === props.location._id;
 
@@ -81,7 +88,7 @@ export function LocationPin(props: {
             {props.location.description}
           </p>
           <div class="mt-2 flex justify-end">
-            <A href={`/dashboard/location/${props.location.slug}`}>
+            <A href={getLocationHref(props.location)}>
               <Button variant="outline" size="sm">
                 View
               </Button>

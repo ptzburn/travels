@@ -5,6 +5,10 @@ import * as routes from "./routes.ts";
 
 const logs = createRouter()
   .openapi(
+    routes.get,
+    handlers.get,
+  )
+  .openapi(
     routes.post,
     handlers.post,
   );

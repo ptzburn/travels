@@ -5,6 +5,7 @@ import * as maplibre from "maplibre-gl";
 import {
   CENTER_OF_FINLAND,
   HELSINKI_LONG_LAT,
+  MAIN_PAGES,
 } from "~/client/lib/constants.ts";
 import { Index, onCleanup, Show, Suspense } from "solid-js";
 
@@ -12,6 +13,8 @@ import { LocationPin } from "./marker.tsx";
 import { mapStore, setMapStore } from "~/client/stores/map.ts";
 import { DraggableMarker } from "./draggable-marker.tsx";
 import { useLocations } from "~/client/contexts/locations.tsx";
+import { useLocation, useParams } from "@solidjs/router";
+import { hasSlugAndId, hasSlugAndNotId } from "../../../lib/utils.ts";
 
 function MapUpdater() {
   const locations = useLocations();
@@ -19,7 +22,14 @@ function MapUpdater() {
   useMapEffect((map) => {
     setMapStore("map", map);
 
-    if (locations().length < 1) return;
+    if (locations().length < 1) {
+      setMapStore("bounds", null);
+      map.flyTo({
+        center: CENTER_OF_FINLAND,
+        zoom: 2,
+      });
+      return;
+    }
 
     const firstPoint = locations()[0];
 
@@ -79,15 +89,18 @@ function MapResizer() {
   return null;
 }
 
+const updateAddedLocation = (coordinates: maplibre.LngLat) => {
+  if (mapStore.addedLocation) {
+    setMapStore("addedLocation", {
+      lat: coordinates.lat,
+      long: coordinates.lng,
+    });
+  }
+};
+
 export default function MapComponent() {
-  const updateAddedLocation = (coordinates: maplibre.LngLat) => {
-    if (mapStore.addedLocation) {
-      setMapStore("addedLocation", {
-        lat: coordinates.lat,
-        long: coordinates.lng,
-      });
-    }
-  };
+  const location = useLocation();
+  const params = useParams();
 
   const { colorMode } = useColorMode();
 
@@ -97,6 +110,26 @@ export default function MapComponent() {
 
   const locations = useLocations();
 
+  const mapLocations = () => {
+    if (MAIN_PAGES.has(location.pathname)) return locations();
+    if (hasSlugAndNotId(params.slug, params.id)) {
+      const logs = () =>
+        locations().find((loc) => loc.slug === params.slug)?.logs;
+      return logs() ?? [];
+    }
+    if (hasSlugAndId(params.slug, params.id)) {
+      const logs = () =>
+        locations().find((loc) => loc.slug === params.slug)?.logs;
+
+      const log = () => {
+        const currentLogs = logs();
+        if (!currentLogs || currentLogs.length < 1) return;
+        return currentLogs.filter((log) => log._id === params.id);
+      };
+      return log() ?? [];
+    }
+    return [];
+  };
   return (
     <MapsProvider>
       <Map
@@ -133,22 +166,22 @@ export default function MapComponent() {
           />
         </Show>
         <Suspense fallback={null}>
-          <Show when={locations().length > 0}>
-            <Index each={locations()}>
-              {(location) => (
-                <Marker
-                  position={[location().long, location().lat]}
-                  element={(
-                    <div>
-                      <LocationPin
-                        location={location()}
-                      />
-                    </div>
-                  ) as HTMLElement}
-                />
-              )}
-            </Index>
-          </Show>
+          <Index
+            each={mapLocations()}
+          >
+            {(location) => (
+              <Marker
+                position={[location().long, location().lat]}
+                element={(
+                  <div>
+                    <LocationPin
+                      location={location()}
+                    />
+                  </div>
+                ) as HTMLElement}
+              />
+            )}
+          </Index>
         </Suspense>
       </Map>
     </MapsProvider>

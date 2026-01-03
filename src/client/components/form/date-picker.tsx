@@ -35,6 +35,7 @@ import {
   TextFieldErrorMessage,
   TextFieldLabel,
 } from "~/client/components/ui/text-field.tsx";
+import { formatDate } from "~/client/lib/utils.ts";
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => ({
   value: i,
@@ -53,10 +54,6 @@ type DatePickerProps = {
   placeholder?: string;
   disabled?: boolean;
 };
-
-function formatDate(value: number | string) {
-  return new Date(value);
-}
 
 export function DatePicker(props: DatePickerProps) {
   const field = useFieldContext<number>();

@@ -17,7 +17,10 @@ export async function findAllUserLocations(user: string) {
 export async function findLocationBySlug(slug: string) {
   const location = await Location.findOne({
     slug,
-  }).populate<{ logs: LocationLogDocument[] }>("logs");
+  }).populate<{ logs: LocationLogDocument[] }>({
+    path: "logs",
+    options: { sort: { startedAt: -1 } },
+  });
 
   return location;
 }
