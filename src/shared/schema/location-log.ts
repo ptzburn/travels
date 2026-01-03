@@ -9,9 +9,9 @@ import {
 
 export const SelectLocationLogSchema = z.object({
   _id: IdSchema,
+  user: IdSchema,
   location: IdSchema,
   name: NameSchema,
-  slug: z.string(),
   description: DescriptionSchema,
   startedAt: z.number(),
   endedAt: z.number(),
@@ -24,8 +24,8 @@ export const SelectLocationLogSchema = z.object({
 export const InsertLocationLogSchema = SelectLocationLogSchema
   .omit({
     _id: true,
+    user: true,
     location: true,
-    slug: true,
     createdAt: true,
     updatedAt: true,
   })

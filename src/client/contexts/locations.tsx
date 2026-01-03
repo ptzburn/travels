@@ -31,7 +31,7 @@ import {
 import { Button } from "../components/ui/button.tsx";
 
 import Home from "lucide-solid/icons/home";
-import { NOT_FOUND } from "../../shared/http-status.ts";
+import { NOT_FOUND } from "~/shared/http-status.ts";
 
 const LocationsContext = createContext<
   AccessorWithLatest<SelectLocation[]>

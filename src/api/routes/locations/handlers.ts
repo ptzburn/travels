@@ -16,6 +16,7 @@ import type {
   RemoveRoute,
 } from "./routes.ts";
 import { SelectLocationSchema } from "~/shared/schema/location.ts";
+import { SelectLocationLogSchema } from "~/shared/schema/location-log.ts";
 import mongoose from "mongoose";
 import slugify from "slug";
 import z from "zod";
@@ -91,6 +92,11 @@ export const put: AppRouteHandler<PutRoute> = async (c) => {
   const parsedLocation = SelectLocationSchema.extend({
     _id: z.instanceof(mongoose.Types.ObjectId),
     user: z.instanceof(mongoose.Types.ObjectId),
+    logs: z.array(SelectLocationLogSchema.extend({
+      _id: z.instanceof(mongoose.Types.ObjectId),
+      user: z.instanceof(mongoose.Types.ObjectId),
+      location: z.instanceof(mongoose.Types.ObjectId),
+    })).optional(),
   }).parse(
     updatedLocation,
   );
@@ -119,6 +125,11 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
   const parsedLocation = SelectLocationSchema.extend({
     _id: z.instanceof(mongoose.Types.ObjectId),
     user: z.instanceof(mongoose.Types.ObjectId),
+    logs: z.array(SelectLocationLogSchema.extend({
+      _id: z.instanceof(mongoose.Types.ObjectId),
+      user: z.instanceof(mongoose.Types.ObjectId),
+      location: z.instanceof(mongoose.Types.ObjectId),
+    })).optional(),
   }).parse(
     location,
   );

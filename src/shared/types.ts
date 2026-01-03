@@ -28,10 +28,14 @@ export type UpdateLocationLog = z.infer<typeof UpdateLocationLogSchema>;
 
 // LOCATIONS
 export type SelectLocation =
-  & Omit<z.infer<typeof SelectLocationSchema>, "createdAt" | "updatedAt">
+  & Omit<
+    z.infer<typeof SelectLocationSchema>,
+    "createdAt" | "updatedAt" | "logs"
+  >
   & {
     createdAt: string;
     updatedAt: string;
+    logs?: SelectLocationLog[];
   };
 export type InsertLocation = z.infer<typeof InsertLocationSchema>;
 

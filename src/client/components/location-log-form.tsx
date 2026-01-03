@@ -35,6 +35,7 @@ import {
   InsertLocationLogSchema,
   UpdateLocationLogSchema,
 } from "~/shared/schema/location-log.ts";
+import { addLocationLogAction } from "../lib/actions/logs.ts";
 
 type LocationLogFormProps = {
   location: SelectLocation;
@@ -44,6 +45,8 @@ type LocationLogFormProps = {
 export function LocationLogForm(props: LocationLogFormProps) {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = createSignal(false);
   const [navigation, setNavigation] = createSignal<(() => void) | null>(null);
+
+  const addLocationLog = useAction(addLocationLogAction);
 
   const navigate = useNavigate();
 
@@ -63,12 +66,41 @@ export function LocationLogForm(props: LocationLogFormProps) {
         ? UpdateLocationLogSchema
         : InsertLocationLogSchema,
     },
-    onSubmitInvalid: () => {
+    onSubmitInvalid: ({ value }) => {
+      console.log(value);
       toast.error("Check the input values");
     },
     onSubmit: async ({ value, formApi }) => {
       try {
-        console.log(value);
+        const result = await addLocationLog(
+          value as InsertLocationLog,
+          props.location.slug,
+        );
+
+        if ("errors" in result && result.errors) {
+          for (const error of result.errors) {
+            const [fieldName, message] = Object.entries(error)[0];
+            formApi.setFieldMeta(
+              fieldName as keyof InsertLocationLog,
+              (prev) => ({
+                ...prev,
+                isTouched: true,
+                errorMap: {
+                  ...prev.errorMap,
+                  onSubmit: { message },
+                },
+              }),
+            );
+          }
+        } else {
+          form.reset();
+          navigate(`/dashboard/location/${props.location.slug}`);
+          toast.success(
+            props.initialLocationLog
+              ? "Location Log was updated"
+              : "Location Log was added",
+          );
+        }
       } catch (error) {
         toast.error(Error.isError(error) ? error.message : "Unknown error");
       }

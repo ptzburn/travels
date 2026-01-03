@@ -97,7 +97,9 @@ export function DatePicker(props: DatePickerProps) {
             mode="single"
             value={formatDate(field().state.value)}
             onValueChange={(date) => {
-              field().handleChange(date?.getTime() ?? 0);
+              if (date) {
+                field().handleChange(date.getTime());
+              }
               field().handleBlur();
             }}
           >
