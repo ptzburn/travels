@@ -4,8 +4,10 @@
   "scripts": {
     "dev": "concurrently \"deno task dev:db\" \"deno task dev:app\"",
     "dev:app": "deno run --allow-env --allow-sys --allow-ffi --env-file --allow-net --allow-read --allow-write --allow-run npm:vinxi dev --port 3030",
+    "prod": "deno run --allow-env --allow-sys --allow-ffi --env-file=.env.prod --allow-net --allow-read --allow-write --allow-run npm:vinxi dev --port 3030",
     "dev:db": "turso dev --db-file local.db",
     "build": "deno run --allow-env --allow-read --allow-sys --allow-run --allow-ffi --allow-write npm:vinxi build",
+    "build:prod": "bunx vinxi build",
     "start": "deno run --allow-net --allow-read --allow-write --allow-env --allow-sys ./.output/server/index.mjs",
     "version": "vinxi version",
     "check": "deno fmt --check ./src/ && deno lint ./src/ && deno check ./src/",
