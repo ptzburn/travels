@@ -1,27 +1,11 @@
-import { isServer } from "solid-js/web";
-import { getRequestEvent } from "solid-js/web";
 import { rpcClient } from "~/shared/rpc-client.ts";
 import { query } from "@solidjs/router";
 import { SearchQuery } from "~/shared/types.ts";
 
 export const userLocationsQuery = query(async () => {
-  let cookie: string;
+  "use server";
 
-  if (isServer) {
-    const event = getRequestEvent();
-    if (!event) {
-      throw new Error("No request event available");
-    }
-    cookie = event.request.headers.get("cookie") ?? "";
-  } else {
-    cookie = document.cookie;
-  }
-
-  const response = await rpcClient.locations.$get({}, {
-    headers: {
-      cookie,
-    },
-  });
+  const response = await rpcClient.locations.$get({});
 
   if (!response.ok) {
     const error = await response.json();
@@ -32,25 +16,10 @@ export const userLocationsQuery = query(async () => {
 }, "locations");
 
 export const userLocationQuery = query(async (slug: string) => {
-  let cookie: string;
-
-  if (isServer) {
-    const event = getRequestEvent();
-    if (!event) {
-      throw new Error("No request event available");
-    }
-    cookie = event.request.headers.get("cookie") ?? "";
-  } else {
-    cookie = document.cookie;
-  }
+  "use server";
 
   const response = await rpcClient.locations[":slug"].$get(
     { param: { slug } },
-    {
-      headers: {
-        cookie,
-      },
-    },
   );
 
   if (!response.ok) {
@@ -71,23 +40,9 @@ export const userLocationQuery = query(async (slug: string) => {
 }, "location");
 
 export const locationSearchQuery = query(async (query: SearchQuery) => {
-  let cookie: string;
+  "use server";
 
-  if (isServer) {
-    const event = getRequestEvent();
-    if (!event) {
-      throw new Error("No request event available");
-    }
-    cookie = event.request.headers.get("cookie") ?? "";
-  } else {
-    cookie = document.cookie;
-  }
-
-  const response = await rpcClient.search.$get({ query }, {
-    headers: {
-      cookie,
-    },
-  });
+  const response = await rpcClient.search.$get({ query });
 
   if (!response.ok && response.status !== 422) {
     const json = await response.json();

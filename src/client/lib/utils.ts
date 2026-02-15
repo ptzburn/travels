@@ -3,6 +3,7 @@ import type { ClassValue } from "clsx";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { SelectLocation, SelectLocationLog } from "../../shared/types.ts";
+import { getRequestEvent } from "solid-js/web";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,3 +45,11 @@ export const getLocationHref = (
   if ("slug" in loc) return `/dashboard/location/${loc.slug}`;
   return "/dashboard";
 };
+
+export function getServerHeaders() {
+  const event = getRequestEvent();
+  if (!event) {
+    throw new Error("No request event available");
+  }
+  return event.request.headers;
+}
