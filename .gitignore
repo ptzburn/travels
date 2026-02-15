@@ -10,8 +10,12 @@ app.config.timestamp_*.js
 .env
 .env*.local
 
+local.db*
+
 # dependencies
 /node_modules
+
+/src/api/db/migrations
 
 # IDEs and editors
 /.idea

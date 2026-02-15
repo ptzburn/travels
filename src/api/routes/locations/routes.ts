@@ -13,10 +13,11 @@ import {
 } from "~/api/utils/schemas/index.ts";
 import * as HttpStatus from "~/shared/http-status.ts";
 import {
-  InsertLocationSchema,
-  SelectLocationSchema,
-  UpdateLocationSchema,
-} from "~/shared/schema/location.ts";
+  InsertLocation,
+  SelectLocation,
+  SelectLocationWithLogsSchema,
+  UpdateLocation,
+} from "~/api/db/schema/location.ts";
 import jsonContentRequired from "~/api/utils/json-content-required.ts";
 import { authMiddleware, defaultRateLimiter } from "~/api/middlewares/index.ts";
 
@@ -32,7 +33,7 @@ export const get = createRoute({
   middleware: [authMiddleware, defaultRateLimiter],
   responses: {
     [HttpStatus.OK.CODE]: jsonContent(
-      z.array(SelectLocationSchema),
+      z.array(SelectLocation),
       "Schema of location array",
     ),
     [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
@@ -59,13 +60,13 @@ export const post = createRoute({
   middleware: [authMiddleware, defaultRateLimiter],
   request: {
     body: jsonContentRequired(
-      InsertLocationSchema,
+      InsertLocation,
       "Basic info for the new location",
     ),
   },
   responses: {
     [HttpStatus.OK.CODE]: jsonContent(
-      SelectLocationSchema,
+      SelectLocation,
       "Locaton schema",
     ),
     [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
@@ -73,7 +74,7 @@ export const post = createRoute({
       "Unauthorized",
     ),
     [HttpStatus.UNPROCESSABLE_ENTITY.CODE]: jsonContent(
-      createErrorSchema(InsertLocationSchema),
+      createErrorSchema(InsertLocation),
       "Validation error(s)",
     ),
     [HttpStatus.CONFLICT.CODE]: jsonContent(
@@ -101,13 +102,13 @@ export const put = createRoute({
   request: {
     params: ParamsSchema,
     body: jsonContentRequired(
-      UpdateLocationSchema,
+      UpdateLocation,
       "Location update schema",
     ),
   },
   responses: {
     [HttpStatus.OK.CODE]: jsonContent(
-      SelectLocationSchema,
+      SelectLocation,
       "Locaton schema",
     ),
     [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
@@ -127,7 +128,7 @@ export const put = createRoute({
       "Location already exists",
     ),
     [HttpStatus.UNPROCESSABLE_ENTITY.CODE]: jsonContent(
-      createErrorSchema(UpdateLocationSchema).or(ParamsSchema),
+      createErrorSchema(UpdateLocation).or(ParamsSchema),
       "Validation error(s)",
     ),
     [HttpStatus.TOO_MANY_REQUESTS.CODE]: jsonContent(
@@ -153,7 +154,7 @@ export const getOne = createRoute({
   },
   responses: {
     [HttpStatus.OK.CODE]: jsonContent(
-      SelectLocationSchema,
+      SelectLocationWithLogsSchema,
       "Location schema",
     ),
     [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(

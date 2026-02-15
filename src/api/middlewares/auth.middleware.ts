@@ -4,6 +4,7 @@ import type { AppBindings } from "~/api/lib/types.ts";
 
 import { auth } from "~/shared/auth.ts";
 import { UNAUTHORIZED } from "~/shared/http-status.ts";
+import type { Session, User } from "~/shared/types.ts";
 
 const authMiddleware = createMiddleware<AppBindings>(async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
@@ -16,8 +17,8 @@ const authMiddleware = createMiddleware<AppBindings>(async (c, next) => {
     );
   }
 
-  c.set("user", session.user);
-  c.set("session", session.session);
+  c.set("user", session.user as unknown as User);
+  c.set("session", session.session as unknown as Session);
   return next();
 });
 

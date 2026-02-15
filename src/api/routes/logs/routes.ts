@@ -11,13 +11,13 @@ import {
 } from "~/api/utils/schemas/index.ts";
 import { authMiddleware, defaultRateLimiter } from "~/api/middlewares/index.ts";
 import jsonContentRequired from "~/api/utils/json-content-required.ts";
-import {
-  InsertLocationLogSchema,
-  SelectLocationLogSchema,
-} from "~/shared/schema/location-log.ts";
 import * as HttpStatus from "~/shared/http-status.ts";
 import jsonContent from "~/api/utils/json-content.ts";
 import SlugIdParamsSchema from "~/api/utils/schemas/slug-id-params-schema.ts";
+import {
+  InsertLocationLog,
+  SelectLocationLog,
+} from "~/api/db/schema/location-log.ts";
 
 const tags = ["Location Logs"];
 const ParamsSchema = SlugParamsSchema("slug", "Location slug");
@@ -36,7 +36,7 @@ export const get = createRoute({
   },
   responses: {
     [HttpStatus.OK.CODE]: jsonContent(
-      SelectLocationLogSchema,
+      SelectLocationLog,
       "Locaton Log schema",
     ),
     [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
@@ -77,13 +77,13 @@ export const post = createRoute({
   request: {
     params: ParamsSchema,
     body: jsonContentRequired(
-      InsertLocationLogSchema,
+      InsertLocationLog,
       "Location log insert fields schema",
     ),
   },
   responses: {
     [HttpStatus.OK.CODE]: jsonContent(
-      SelectLocationLogSchema,
+      SelectLocationLog,
       "Locaton Log schema",
     ),
     [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
@@ -103,7 +103,7 @@ export const post = createRoute({
       "Location log already exists",
     ),
     [HttpStatus.UNPROCESSABLE_ENTITY.CODE]: jsonContent(
-      createErrorSchema(InsertLocationLogSchema).or(ParamsSchema),
+      createErrorSchema(InsertLocationLog).or(ParamsSchema),
       "Validation error(s)",
     ),
     [HttpStatus.TOO_MANY_REQUESTS.CODE]: jsonContent(

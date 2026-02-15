@@ -1,6 +1,6 @@
 import type { RouteConfig, RouteHandler, z } from "@hono/zod-openapi";
 import type { PinoLogger } from "hono-pino";
-import { Session, User } from "~/shared/types.ts";
+import type { Session, User } from "~/shared/types.ts";
 
 export type AppBindings = {
   Variables: {

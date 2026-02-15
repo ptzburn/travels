@@ -22,9 +22,9 @@ export function LocationPin(props: {
   const getLocationHref = (loc: SelectLocation | SelectLocationLog) =>
     "slug" in loc
       ? `/dashboard/location/${loc.slug}`
-      : `/dashboard/location/${params.slug}/${loc._id}`;
+      : `/dashboard/location/${params.slug}/${loc.id}`;
 
-  const isHovered = () => mapStore.selectedLocation?._id === props.location._id;
+  const isHovered = () => mapStore.selectedLocation?.id === props.location.id;
 
   return (
     <div

@@ -1,31 +1,14 @@
 import { betterAuth } from "better-auth";
-import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { openAPI } from "better-auth/plugins";
 
-import env from "~/env.ts";
-import { client, db } from "~/api/db/mongodb.ts";
+import env from "../env.ts";
+import db from "../api/db/index.ts";
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db, {
-    client,
+  database: drizzleAdapter(db, {
+    provider: "sqlite",
   }),
-  user: {
-    modelName: "users",
-  },
-  session: {
-    modelName: "sessions",
-    cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60, // Cache duration in seconds
-    },
-  },
-  account: {
-    modelName: "accounts",
-    accountLinking: {
-      enabled: true,
-      trustedProviders: ["google"],
-    },
-  },
   emailAndPassword: {
     enabled: false,
   },
@@ -44,5 +27,8 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "travel-log",
+    database: {
+      generateId: false,
+    },
   },
 });

@@ -12,12 +12,12 @@ function LocationLogPage() {
   const locations = useLocations();
 
   const location = () => locations().find((loc) => loc.slug === params.slug);
-  const logs = () => location()?.logs;
+  const logs = () => location()?.locationLogs;
 
   const log = () => {
     const currentLogs = logs();
     if (!currentLogs || currentLogs.length < 1) return;
-    return currentLogs.find((log) => log._id === params.id);
+    return currentLogs.find((log) => log.id === Number(params.id));
   };
 
   const displayDateElement = (log: SelectLocationLog) => {
@@ -50,7 +50,7 @@ function LocationLogPage() {
       <Show when={log()}>
         {(log) => (
           <>
-            <p class="text-sm italic text-muted-foreground">
+            <p class="text-muted-foreground text-sm italic">
               {displayDateElement(log())}
             </p>
             <h2 class="text-xl">{log().name}</h2>

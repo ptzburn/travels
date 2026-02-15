@@ -1,4 +1,5 @@
 import { z, ZodError } from "zod";
+import process from "node:process";
 
 const EnvSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default(
@@ -13,8 +14,8 @@ const EnvSchema = z.object({
     "trace",
     "silent",
   ]).default("info"),
-  MONGODB_URI: z.string(),
-  DB_NAME: z.enum(["development", "test", "production"]).default("test"),
+  TURSO_DATABASE_URL: z.url(),
+  TURSO_AUTH_TOKEN: z.string(),
   APP_URL: z.url(),
   CONTACT_EMAIL: z.email(),
   BETTER_AUTH_SECRET: z.string(),
@@ -27,7 +28,7 @@ export type env = z.infer<typeof EnvSchema>;
 let env: env;
 
 try {
-  env = EnvSchema.parse(Deno.env.toObject());
+  env = EnvSchema.parse(process.env);
 } catch (error) {
   if (error instanceof ZodError) {
     const missingValues = Object.keys(z.flattenError(error).fieldErrors)
@@ -37,7 +38,7 @@ try {
     // deno-lint-ignore no-console
     console.error("Missing required variables in .env:\n" + missingValues);
   }
-  Deno.exit(1);
+  process.exit(1);
 }
 
 export default env;

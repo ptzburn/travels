@@ -1,47 +1,35 @@
 import z from "zod";
-import { auth } from "./auth.ts";
-import {
-  InsertLocationSchema,
-  NominatimResultSchema,
-  SelectLocationSchema,
-  UpdateLocationSchema,
-} from "./schema/location.ts";
-import { SearchQuerySchema } from "./schema/search.ts";
-import {
-  InsertLocationLogSchema,
-  SelectLocationLogSchema,
-  UpdateLocationLogSchema,
-} from "./schema/location-log.ts";
 
-export type User = typeof auth.$Infer.Session.user;
-export type Session = typeof auth.$Infer.Session.session;
+import { NominatimResultSchema, SearchSchema } from "./zod-schemas.ts";
+import {
+  InsertLocation as InsertLocationSchema,
+  SelectLocation as SelectLocationSchema,
+  UpdateLocation as UpdateLocationSchema,
+} from "../api/db/schema/location.ts";
+import {
+  InsertLocationLog as InsertLocationLogSchema,
+  SelectLocationLog as SelectLocationLogSchema,
+  UpdateLocationLog as UpdateLocationLogSchema,
+} from "../api/db/schema/location-log.ts";
+import { session, user } from "../api/db/schema/auth.ts";
+
+export type User = typeof user.$inferSelect;
+export type Session = typeof session.$inferSelect;
+
+// LOCATIONS
+
+export type SelectLocation = z.infer<typeof SelectLocationSchema> & {
+  locationLogs?: SelectLocationLog[];
+};
+export type InsertLocation = z.infer<typeof InsertLocationSchema>;
+export type UpdateLocation = z.infer<typeof UpdateLocationSchema>;
 
 // LOCATION LOGS
-export type SelectLocationLog =
-  & Omit<z.infer<typeof SelectLocationLogSchema>, "createdAt" | "updatedAt">
-  & {
-    createdAt: string;
-    updatedAt: string;
-  };
+export type SelectLocationLog = z.infer<typeof SelectLocationLogSchema>;
 export type InsertLocationLog = z.infer<typeof InsertLocationLogSchema>;
 export type UpdateLocationLog = z.infer<typeof UpdateLocationLogSchema>;
 
-// LOCATIONS
-export type SelectLocation =
-  & Omit<
-    z.infer<typeof SelectLocationSchema>,
-    "createdAt" | "updatedAt" | "logs"
-  >
-  & {
-    createdAt: string;
-    updatedAt: string;
-    logs?: SelectLocationLog[];
-  };
-export type InsertLocation = z.infer<typeof InsertLocationSchema>;
-
-export type UpdateLocation = z.infer<typeof UpdateLocationSchema>;
-
-export type SearchQuery = z.infer<typeof SearchQuerySchema>;
+export type SearchQuery = z.infer<typeof SearchSchema>;
 
 export type NominatimResult = z.infer<typeof NominatimResultSchema>;
 // MAP
