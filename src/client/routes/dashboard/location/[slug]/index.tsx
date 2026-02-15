@@ -23,14 +23,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/client/components/ui/dropdown-menu.tsx";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "~/client/components/ui/dialog.tsx";
+import { DeletionDialog } from "~/client/components/deletion-dialog.tsx";
 import { deleteLocationAction } from "~/client/lib/actions/locations.ts";
 import { toast } from "solid-sonner";
 import { Spinner } from "~/client/components/ui/spinner.tsx";
@@ -122,44 +115,13 @@ function LocationPage() {
             )}
           </Show>
         </div>
-        <Dialog
-          open={isDialogOpen()}
-          onOpenChange={deleteLocationSubmission.pending
-            ? undefined
-            : setIsDialogOpen}
-        >
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you sure absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete the
-                location and remove its data from our servers.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                disabled={deleteLocationSubmission.pending}
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Close
-              </Button>
-              <Button
-                variant="destructive"
-                disabled={deleteLocationSubmission.pending}
-                onClick={() => handleDelete(location()[0].slug)}
-              >
-                Delete
-                <Show
-                  when={!deleteLocationSubmission.pending}
-                  fallback={<Spinner />}
-                >
-                  <Trash2 />
-                </Show>
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <DeletionDialog
+          isOpen={isDialogOpen}
+          setIsOpen={setIsDialogOpen}
+          isPending={deleteLocationSubmission.pending}
+          icon={Trash2}
+          onDelete={() => handleDelete(location()[0].slug)}
+        />
       </Show>
     </Suspense>
   );

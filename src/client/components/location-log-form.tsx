@@ -15,20 +15,8 @@ import MapPinPen from "lucide-solid/icons/map-pin-pen";
 
 import { Button } from "./ui/button.tsx";
 import { useAction, useBeforeLeave, useNavigate } from "@solidjs/router";
-import {
-  createEffect,
-  createSignal,
-  on,
-  onCleanup,
-  onMount,
-  Show,
-} from "solid-js";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogTitle,
-} from "./ui/alert-dialog.tsx";
+import { createEffect, createSignal, on, onCleanup, onMount } from "solid-js";
+import { ConfirmationDialog } from "./confirmation-dialog.tsx";
 import { Separator } from "./ui/separator.tsx";
 import { LocationSearch } from "../routes/dashboard/add/_components/location-search.tsx";
 import {
@@ -176,33 +164,6 @@ export function LocationLogForm(props: LocationLogFormProps) {
 
   return (
     <>
-      <Show when={isAlertDialogOpen()}>
-        <AlertDialog
-          open={isAlertDialogOpen()}
-          onOpenChange={setIsAlertDialogOpen}
-        >
-          <AlertDialogContent>
-            <AlertDialogTitle>Are you sure you want to leave?</AlertDialogTitle>
-            <AlertDialogDescription>
-              All unsaved changes will be lost.
-            </AlertDialogDescription>
-            <div class="flex flex-col gap-2">
-              <Button
-                type="button"
-                onClick={() => {
-                  const retry = navigation();
-                  if (retry) {
-                    setMapStore("addedLocation", null);
-                    retry();
-                  }
-                }}
-              >
-                Confirm
-              </Button>
-            </div>
-          </AlertDialogContent>
-        </AlertDialog>
-      </Show>
       <form
         class="mt-4 flex flex-col gap-2"
         onSubmit={(e) => {
@@ -283,6 +244,22 @@ export function LocationLogForm(props: LocationLogFormProps) {
         <Separator class="my-4" />
         <LocationSearch />
       </form>
+
+      <ConfirmationDialog
+        open={isAlertDialogOpen}
+        onOpenChange={setIsAlertDialogOpen}
+        title="Are you sure you want to leave?"
+        description="All unsaved changes will be lost."
+        confirmText="Confirm"
+        cancelText="Stay"
+        onConfirm={() => {
+          const retry = navigation();
+          if (retry) {
+            setMapStore("addedLocation", null);
+            retry();
+          }
+        }}
+      />
     </>
   );
 }
