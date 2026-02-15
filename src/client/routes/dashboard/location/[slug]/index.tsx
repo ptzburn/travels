@@ -84,7 +84,7 @@ function LocationPage() {
             }
           </h2>
           <p class="text-sm">{location()[0].description}</p>
-          <Show when={location()[0].logs}>
+          <Show when={location()[0].locationLogs}>
             {(logs) => (
               <Show
                 when={logs().length}

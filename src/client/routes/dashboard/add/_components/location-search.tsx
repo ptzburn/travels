@@ -12,7 +12,7 @@ import Search from "lucide-solid/icons/search";
 import AlertCircleIcon from "lucide-solid/icons/alert-circle";
 import { useAppForm } from "~/client/hooks/use-app-form.tsx";
 import { toast } from "solid-sonner";
-import { SearchQuerySchema } from "~/shared/schema/search.ts";
+import { SearchSchema } from "~/shared/zod-schemas.ts";
 import {
   TextField,
   TextFieldErrorMessage,
@@ -51,7 +51,7 @@ export function LocationSearch() {
       q: "",
     },
     validators: {
-      onBlur: SearchQuerySchema,
+      onBlur: SearchSchema,
     },
     onSubmitInvalid: () => {
       toast.error("Enter a search term");

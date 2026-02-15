@@ -31,7 +31,7 @@ export function LocationCarousel(props: LocationCarouselProps) {
   const getLocationHref = (loc: SelectLocation | SelectLocationLog) =>
     "slug" in loc
       ? `/dashboard/location/${loc.slug}`
-      : `/dashboard/location/${params.slug}/${loc._id}`;
+      : `/dashboard/location/${params.slug}/${loc.id}`;
 
   const displayDateElement = (log: SelectLocationLog) => {
     if (log.startedAt === log.endedAt) {
@@ -62,7 +62,7 @@ export function LocationCarousel(props: LocationCarouselProps) {
               >
                 <Card
                   class={`${
-                    mapStore.selectedLocation?._id === location()._id
+                    mapStore.selectedLocation?.id === location().id
                       ? "border-accent-foreground"
                       : ""
                   } hover:cursor-pointer`}

@@ -1,6 +1,7 @@
 import { query } from "@solidjs/router";
 import { getRequestEvent } from "solid-js/web";
 import { auth } from "~/shared/auth.ts";
+import type { Session, User } from "~/shared/types.ts";
 
 export const userSessionQuery = query(async () => {
   "use server";
@@ -14,5 +15,5 @@ export const userSessionQuery = query(async () => {
     headers,
   });
 
-  return session;
+  return session as unknown as { session: Session; user: User } | null;
 }, "session");

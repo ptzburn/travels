@@ -7,9 +7,9 @@ import {
 } from "~/shared/types.ts";
 import { CENTER_OF_FINLAND } from "../lib/constants.ts";
 import {
-  InsertLocationSchema,
-  UpdateLocationSchema,
-} from "~/shared/schema/location.ts";
+  InsertLocation as InsertLocationSchema,
+  UpdateLocation as UpdateLocationSchema,
+} from "~/api/db/schema/location.ts";
 import { mapStore, setMapStore } from "../stores/map.ts";
 
 import MapPin from "lucide-solid/icons/map-pin";
@@ -112,7 +112,7 @@ export function LocationForm(props: LocationFormProps) {
 
   onMount(() => {
     setMapStore("addedLocation", {
-      _id: "123",
+      id: -1,
       name: "AddedPoint",
       description: "",
       lat: props.initialLocation?.lat ??
@@ -251,7 +251,7 @@ export function LocationForm(props: LocationFormProps) {
               <Button
                 type="button"
                 variant="outline"
-                onclick={() => navigate(-1)}
+                onClick={() => navigate(-1)}
                 disabled={isSubmitting()}
               >
                 <ArrowLeft size={24} />

@@ -32,9 +32,9 @@ import {
 import { Separator } from "./ui/separator.tsx";
 import { LocationSearch } from "../routes/dashboard/add/_components/location-search.tsx";
 import {
-  InsertLocationLogSchema,
-  UpdateLocationLogSchema,
-} from "~/shared/schema/location-log.ts";
+  InsertLocationLog as InsertLocationLogSchema,
+  UpdateLocationLog as UpdateLocationLogSchema,
+} from "~/api/db/schema/location-log.ts";
 import { addLocationLogAction } from "../lib/actions/logs.ts";
 
 type LocationLogFormProps = {
@@ -109,7 +109,7 @@ export function LocationLogForm(props: LocationLogFormProps) {
 
   onMount(() => {
     setMapStore("addedLocation", {
-      _id: "123",
+      id: -1,
       name: "AddedPoint",
       zoom: 12,
       description: "",

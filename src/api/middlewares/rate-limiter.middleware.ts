@@ -13,7 +13,7 @@ export function createRateLimiter({
     limit,
     standardHeaders: "draft-7", // draft-7: combined `RateLimit` header
     keyGenerator: (c) => {
-      return c.var.user.id;
+      return c.var.user.id.toString();
     },
     // Add custom error handler
     handler: (c) => {

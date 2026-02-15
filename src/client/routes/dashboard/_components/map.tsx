@@ -114,17 +114,17 @@ export default function MapComponent() {
     if (MAIN_PAGES.has(location.pathname)) return locations();
     if (hasSlugAndNotId(params.slug, params.id)) {
       const logs = () =>
-        locations().find((loc) => loc.slug === params.slug)?.logs;
+        locations().find((loc) => loc.slug === params.slug)?.locationLogs;
       return logs() ?? [];
     }
     if (hasSlugAndId(params.slug, params.id)) {
       const logs = () =>
-        locations().find((loc) => loc.slug === params.slug)?.logs;
+        locations().find((loc) => loc.slug === params.slug)?.locationLogs;
 
       const log = () => {
         const currentLogs = logs();
         if (!currentLogs || currentLogs.length < 1) return;
-        return currentLogs.filter((log) => log._id === params.id);
+        return currentLogs.filter((log) => log.id === params.id);
       };
       return log() ?? [];
     }
@@ -150,7 +150,7 @@ export default function MapComponent() {
         <MapUpdater />
         <MapFlyer />
         <MapResizer />
-        <Show when={mapStore.addedLocation?._id}>
+        <Show when={mapStore.addedLocation?.id}>
           <Marker
             position={mapStore.addedLocation
               ? [mapStore.addedLocation.long, mapStore.addedLocation.lat]

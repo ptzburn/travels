@@ -40,7 +40,7 @@ export const getLocationHref = (
   loc: SelectLocation | SelectLocationLog,
   slug: string | undefined,
 ) => {
-  if (slug) return `/dashboard/location/${slug}/${loc._id}`;
+  if (slug) return `/dashboard/location/${slug}/${loc.id}`;
   if ("slug" in loc) return `/dashboard/location/${loc.slug}`;
   return "/dashboard";
 };

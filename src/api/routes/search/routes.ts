@@ -10,8 +10,7 @@ import {
 import * as HttpStatus from "~/shared/http-status.ts";
 import { cache } from "hono/cache";
 import { authMiddleware, defaultRateLimiter } from "~/api/middlewares/index.ts";
-import { SearchQuerySchema } from "~/shared/schema/search.ts";
-import { NominatimResultSchema } from "~/shared/schema/location.ts";
+import { NominatimResultSchema, SearchSchema } from "~/shared/zod-schemas.ts";
 
 const tags = ["Search"];
 
@@ -31,7 +30,7 @@ export const get = createRoute({
     }),
   ],
   request: {
-    query: SearchQuerySchema,
+    query: SearchSchema,
   },
   responses: {
     [HttpStatus.OK.CODE]: jsonContent(
@@ -43,7 +42,7 @@ export const get = createRoute({
       "Unauthorized",
     ),
     [HttpStatus.UNPROCESSABLE_ENTITY.CODE]: jsonContent(
-      createErrorSchema(SearchQuerySchema),
+      createErrorSchema(SearchSchema),
       "Validation error(s)",
     ),
     [HttpStatus.TOO_MANY_REQUESTS.CODE]: jsonContent(

@@ -30,17 +30,17 @@ export function NavLocations() {
     if (MAIN_PAGES.has(location.pathname)) return locations();
     if (hasSlugAndNotId(params.slug, params.id)) {
       const logs = () =>
-        locations().find((loc) => loc.slug === params.slug)?.logs;
+        locations().find((loc) => loc.slug === params.slug)?.locationLogs;
       return logs() ?? [];
     }
     if (hasSlugAndId(params.slug, params.id)) {
       const logs = () =>
-        locations().find((loc) => loc.slug === params.slug)?.logs;
+        locations().find((loc) => loc.slug === params.slug)?.locationLogs;
 
       const log = () => {
         const currentLogs = logs();
         if (!currentLogs || currentLogs.length < 1) return;
-        return currentLogs.filter((log) => log._id === params.id);
+        return currentLogs.filter((log) => log.id === params.id);
       };
       return log() ?? [];
     }
@@ -79,8 +79,8 @@ export function NavLocations() {
               <Collapsible>
                 <A href={getLocationHref(location(), params.slug)}>
                   <SidebarMenuItem
-                    class={mapStore.selectedLocation?._id ===
-                        location()._id
+                    class={mapStore.selectedLocation?.id ===
+                        location().id
                       ? "bg-accent rounded"
                       : undefined}
                     onMouseEnter={() =>
