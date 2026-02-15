@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"deno task dev:db\" \"deno task dev:app\"",
-    "dev:app": "deno run --allow-env --allow-sys --allow-ffi --env-file --allow-net --allow-read --allow-write --allow-run npm:vinxi dev",
+    "dev:app": "deno run --allow-env --allow-sys --allow-ffi --env-file --allow-net --allow-read --allow-write --allow-run npm:vinxi dev --port 3030",
     "dev:db": "turso dev --db-file local.db",
     "build": "deno run --allow-env --allow-read --allow-sys --allow-run --allow-ffi --allow-write npm:vinxi build",
     "start": "deno run --allow-net --allow-read --allow-write --allow-env --allow-sys ./.output/server/index.mjs",
