@@ -58,7 +58,7 @@ export function LocationLogForm(props: LocationLogFormProps) {
         ? UpdateLocationLogSchema
         : InsertLocationLogSchema,
     },
-    onSubmitInvalid: ({ value }) => {
+    onSubmitInvalid: () => {
       toast.error("Check the input values");
     },
     onSubmit: async ({ value, formApi }) => {

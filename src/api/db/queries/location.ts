@@ -2,9 +2,7 @@
 import { and, eq } from "drizzle-orm";
 import { customAlphabet } from "nanoid";
 
-import type { UpdateLocation } from "~/shared/types.ts";
-
-import type { InsertLocation } from "../schema/location.ts";
+import type { InsertLocation, UpdateLocation } from "~/shared/types.ts";
 
 import db from "..";
 import { location } from "../schema/location.ts";

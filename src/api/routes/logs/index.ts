@@ -15,6 +15,10 @@ const logs = createRouter()
   .openapi(
     routes.put,
     handlers.put,
+  )
+  .openapi(
+    routes.remove,
+    handlers.remove,
   );
 
 export default logs;

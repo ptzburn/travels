@@ -48,9 +48,3 @@ export const InsertLocation = createInsertSchema(location, {
   updatedAt: true,
 });
 export const UpdateLocation = InsertLocation.partial();
-
-export type InsertLocation = z.infer<typeof InsertLocation>;
-export type SelectLocation = typeof location.$inferSelect;
-export type SelectLocationWithLogs = SelectLocation & {
-  locationLogs: SelectLocationLog[];
-};

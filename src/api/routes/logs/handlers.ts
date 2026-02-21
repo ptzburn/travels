@@ -1,6 +1,7 @@
 import type { AppRouteHandler } from "~/api/lib/types.ts";
 import {
   FORBIDDEN,
+  NO_CONTENT,
   NOT_FOUND,
   OK,
   UNPROCESSABLE_ENTITY,
@@ -8,9 +9,10 @@ import {
 
 import { HTTPException } from "hono/http-exception";
 
-import type { GetRoute, PostRoute, PutRoute } from "./routes.ts";
+import type { GetRoute, PostRoute, PutRoute, RemoveRoute } from "./routes.ts";
 import { findLocation, findLocationBySlug } from "~/api/db/queries/location.ts";
 import {
+  deleteLocationLog,
   findLocationLog,
   insertLocationLog,
   updateLocationLog,
@@ -63,7 +65,7 @@ export const post: AppRouteHandler<PostRoute> = async (c) => {
 
 export const put: AppRouteHandler<PutRoute> = async (c) => {
   const updates = c.req.valid("json");
-  const { slug, id } = c.req.valid("param");
+  const { id } = c.req.valid("param");
   const user = c.get("user");
 
   if (Object.keys(updates).length === 0) {
@@ -87,4 +89,21 @@ export const put: AppRouteHandler<PutRoute> = async (c) => {
   );
 
   return c.json(updatedLocationLog, OK.CODE);
+};
+
+export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
+  const { id } = c.req.valid("param");
+  const user = c.get("user");
+
+  const locationLog = await findLocationLog(Number(id), user.id);
+
+  if (!locationLog) {
+    throw new HTTPException(NOT_FOUND.CODE, {
+      message: NOT_FOUND.MESSAGE,
+    });
+  }
+
+  await deleteLocationLog(Number(id), user.id);
+
+  return c.body(null, NO_CONTENT.CODE);
 };

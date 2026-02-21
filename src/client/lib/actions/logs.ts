@@ -41,3 +41,27 @@ export const updateLocationLogAction = action(
   },
   "updateLocationLog",
 );
+
+export const deleteLocationLogAction = action(
+  async (slug: string, id: string) => {
+    const response = await rpcClient.locations[":slug"][":id"].$delete({
+      param: { slug, id },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      if ("message" in error) {
+        throw new Error(error.message, { cause: response.status });
+      }
+      if ("errors" in error) {
+        const errorMessages = error.errors.map((e) => Object.values(e))
+          .flat().join(", ");
+        throw new Error(errorMessages, { cause: response.status });
+      }
+      throw new Error("Unknown error");
+    }
+
+    return;
+  },
+  "deleteLocationLog",
+);

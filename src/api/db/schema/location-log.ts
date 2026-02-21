@@ -2,10 +2,7 @@ import { int, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { location } from "./location.ts";
 import { user } from "./auth.ts";
 import { relations } from "drizzle-orm";
-import {
-  locationLogImage,
-  SelectLocationLogImage,
-} from "./location-log-image.ts";
+import { locationLogImage } from "./location-log-image.ts";
 import {
   createInsertSchema,
   createSelectSchema,
