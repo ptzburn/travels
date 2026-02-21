@@ -1,9 +1,8 @@
 import { and, eq } from "drizzle-orm";
 
-import type { InsertLocationLog } from "../schema/location-log.ts";
-
 import db from "../index.ts";
 import { locationLog } from "../schema/location-log.ts";
+import type { InsertLocationLog } from "~/shared/types.ts";
 
 export async function findLocationLog(
   id: number,

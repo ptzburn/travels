@@ -36,7 +36,7 @@ export const updateLocationAction = action(
 
     return await response.json();
   },
-  "addLocation",
+  "updateLocation",
 );
 
 export const deleteLocationAction = action(
@@ -60,5 +60,5 @@ export const deleteLocationAction = action(
 
     return;
   },
-  "addLocation",
+  "deleteLocation",
 );

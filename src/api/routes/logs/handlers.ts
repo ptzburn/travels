@@ -1,13 +1,19 @@
 import type { AppRouteHandler } from "~/api/lib/types.ts";
-import { FORBIDDEN, NOT_FOUND, OK } from "~/shared/http-status.ts";
+import {
+  FORBIDDEN,
+  NOT_FOUND,
+  OK,
+  UNPROCESSABLE_ENTITY,
+} from "~/shared/http-status.ts";
 
 import { HTTPException } from "hono/http-exception";
 
-import type { GetRoute, PostRoute } from "./routes.ts";
+import type { GetRoute, PostRoute, PutRoute } from "./routes.ts";
 import { findLocation, findLocationBySlug } from "~/api/db/queries/location.ts";
 import {
   findLocationLog,
   insertLocationLog,
+  updateLocationLog,
 } from "~/api/db/queries/location-log.ts";
 
 export const get: AppRouteHandler<GetRoute> = async (c) => {
@@ -53,4 +59,32 @@ export const post: AppRouteHandler<PostRoute> = async (c) => {
   );
 
   return c.json(newLocationLog, OK.CODE);
+};
+
+export const put: AppRouteHandler<PutRoute> = async (c) => {
+  const updates = c.req.valid("json");
+  const { slug, id } = c.req.valid("param");
+  const user = c.get("user");
+
+  if (Object.keys(updates).length === 0) {
+    throw new HTTPException(UNPROCESSABLE_ENTITY.CODE, {
+      message: UNPROCESSABLE_ENTITY.EMPTY_OBJECT_MESSAGE,
+    });
+  }
+
+  const locationLog = await findLocationLog(Number(id), user.id);
+
+  if (!locationLog) {
+    throw new HTTPException(NOT_FOUND.CODE, {
+      message: NOT_FOUND.MESSAGE,
+    });
+  }
+
+  const updatedLocationLog = await updateLocationLog(
+    Number(id),
+    updates,
+    user.id,
+  );
+
+  return c.json(updatedLocationLog, OK.CODE);
 };

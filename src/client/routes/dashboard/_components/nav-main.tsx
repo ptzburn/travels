@@ -31,10 +31,14 @@ const navMain = [
   },
 ];
 
-const navLogs = (slug: string) => [{
+const navLogs = (slug: string, id: string) => [{
   title: "Back to Location",
   url: `/dashboard/location/${slug}`,
   icon: ArrowLeft,
+}, {
+  title: "Edit Location Log",
+  url: `/dashboard/location/${slug}/${id}/edit`,
+  icon: MapPinPen,
 }];
 
 const navLocation = (slug: string, title: string) => [
@@ -76,7 +80,9 @@ export function NavMain() {
       return navLocation(params.slug!, title);
     }
 
-    if (hasSlugAndId(params.slug, params.id)) return navLogs(params.slug!);
+    if (hasSlugAndId(params.slug, params.id)) {
+      return navLogs(params.slug!, params.id!);
+    }
 
     return [];
   };

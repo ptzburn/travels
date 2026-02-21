@@ -6,7 +6,11 @@ import {
   locationLogImage,
   SelectLocationLogImage,
 } from "./location-log-image.ts";
-import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-zod";
 import {
   DateSchema,
   DescriptionSchema,
@@ -14,7 +18,6 @@ import {
   LongSchema,
   NameSchema,
 } from "~/shared/zod-schemas.ts";
-import { z } from "zod";
 
 export const locationLog = sqliteTable("locationLog", {
   id: int().primaryKey({ autoIncrement: true }),
@@ -42,7 +45,7 @@ export const locationLogRelations = relations(locationLog, ({ one, many }) => ({
   images: many(locationLogImage),
 }));
 
-export const SelectLocationLog = createInsertSchema(locationLog);
+export const SelectLocationLog = createSelectSchema(locationLog);
 
 export const InsertLocationLog = createInsertSchema(locationLog, {
   name: NameSchema,
@@ -99,9 +102,3 @@ export const UpdateLocationLog = createUpdateSchema(locationLog, {
     });
   }
 });
-
-export type InsertLocationLog = z.infer<typeof InsertLocationLog>;
-export type SelectLocationLog = typeof locationLog.$inferSelect;
-export type SelectLocationLogWithImages = SelectLocationLog & {
-  images: SelectLocationLogImage[];
-};
