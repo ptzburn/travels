@@ -3,6 +3,7 @@ import {
   conflictSchema,
   createErrorSchema,
   forbiddenSchema,
+  ImageFileSchema,
   notFoundSchema,
   serverErrorSchema,
   SlugParamsSchema,
@@ -19,6 +20,8 @@ import {
   SelectLocationLog,
   UpdateLocationLog,
 } from "~/api/db/schema/location-log.ts";
+import multipartContent from "../../utils/multipart-content.ts";
+import { z } from "zod";
 
 const tags = ["Location Logs"];
 const ParamsSchema = SlugParamsSchema("slug", "Location slug");
@@ -210,7 +213,48 @@ export const remove = createRoute({
   },
 });
 
+export const uploadImage = createRoute({
+  summary: "uploads an image to a location log",
+  description: "Upload an image to a location log",
+  tags,
+  method: "post",
+  path: "/locations/{slug}/{id}/images",
+  middleware: [authMiddleware, defaultRateLimiter],
+  request: {
+    params: SlugIdParamsSchema,
+    body: multipartContent(
+      ImageFileSchema,
+      "Image file to upload",
+    ),
+  },
+  responses: {
+    [HttpStatus.OK.CODE]: jsonContent(
+      z.object({
+        fileUrl: z.string(),
+      }),
+      "URL of the uploaded image",
+    ),
+    [HttpStatus.UNAUTHORIZED.CODE]: jsonContent(
+      unauthorizedSchema,
+      "Unauthorized",
+    ),
+    [HttpStatus.UNPROCESSABLE_ENTITY.CODE]: jsonContent(
+      createErrorSchema(ImageFileSchema).or(SlugIdParamsSchema),
+      "Validation error(s)",
+    ),
+    [HttpStatus.TOO_MANY_REQUESTS.CODE]: jsonContent(
+      tooManyRequestsSchema,
+      "Rate limit exceeded",
+    ),
+    [HttpStatus.INTERNAL_SERVER_ERROR.CODE]: jsonContent(
+      serverErrorSchema,
+      "Internal server error",
+    ),
+  },
+});
+
 export type GetRoute = typeof get;
 export type PostRoute = typeof post;
 export type PutRoute = typeof put;
 export type RemoveRoute = typeof remove;
+export type UploadImageRoute = typeof uploadImage;

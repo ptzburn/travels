@@ -2,7 +2,10 @@ import { int, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { location } from "./location.ts";
 import { user } from "./auth.ts";
 import { relations } from "drizzle-orm";
-import { locationLogImage } from "./location-log-image.ts";
+import {
+  locationLogImage,
+  SelectLocationLogImage,
+} from "./location-log-image.ts";
 import {
   createInsertSchema,
   createSelectSchema,
@@ -15,6 +18,7 @@ import {
   LongSchema,
   NameSchema,
 } from "~/shared/zod-schemas.ts";
+import z from "zod";
 
 export const locationLog = sqliteTable("locationLog", {
   id: int().primaryKey({ autoIncrement: true }),
@@ -43,6 +47,10 @@ export const locationLogRelations = relations(locationLog, ({ one, many }) => ({
 }));
 
 export const SelectLocationLog = createSelectSchema(locationLog);
+
+export const SelectLocationLogWithImages = SelectLocationLog.extend({
+  images: z.array(SelectLocationLogImage),
+});
 
 export const InsertLocationLog = createInsertSchema(locationLog, {
   name: NameSchema,

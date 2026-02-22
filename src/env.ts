@@ -21,6 +21,11 @@ const EnvSchema = z.object({
   BETTER_AUTH_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  S3_ENDPOINT: z.string(),
+  S3_ACCESS_KEY: z.string(),
+  S3_ACCESS_SECRET: z.string(),
+  S3_REGION: z.string(),
+  S3_BUCKET: z.string(),
 });
 
 export type env = z.infer<typeof EnvSchema>;

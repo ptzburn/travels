@@ -20,6 +20,13 @@ export async function findLocation(slug: string, userId: number) {
         orderBy(fields, operators) {
           return operators.desc(fields.startedAt);
         },
+        with: {
+          images: {
+            orderBy(fields, operators) {
+              return operators.desc(fields.createdAt);
+            },
+          },
+        },
       },
     },
   });

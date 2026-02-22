@@ -13,6 +13,7 @@ import { Skeleton } from "~/client/components/ui/skeleton.tsx";
 import MapPinPen from "lucide-solid/icons/map-pin-pen";
 import Map from "lucide-solid/icons/map";
 import CirclePlus from "lucide-solid/icons/circle-plus";
+import Image from "lucide-solid/icons/image";
 import ArrowLeft from "lucide-solid/icons/arrow-left";
 import { hasSlugAndId, hasSlugAndNotId } from "~/client/lib/utils.ts";
 import { MAIN_PAGES } from "~/client/lib/constants.ts";
@@ -39,6 +40,10 @@ const navLogs = (slug: string, id: string) => [{
   title: "Edit Location Log",
   url: `/dashboard/location/${slug}/${id}/edit`,
   icon: MapPinPen,
+}, {
+  title: "Manage Images",
+  url: `/dashboard/location/${slug}/${id}/images`,
+  icon: Image,
 }];
 
 const navLocation = (slug: string, title: string) => [

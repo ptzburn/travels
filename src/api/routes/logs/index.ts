@@ -19,6 +19,10 @@ const logs = createRouter()
   .openapi(
     routes.remove,
     handlers.remove,
+  )
+  .openapi(
+    routes.uploadImage,
+    handlers.uploadImage,
   );
 
 export default logs;

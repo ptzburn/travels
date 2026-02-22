@@ -23,6 +23,19 @@ import {
   DropdownMenuTrigger,
 } from "~/client/components/ui/dropdown-menu.tsx";
 
+import { ImageCarousel } from "~/client/components/image-carousel.tsx";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "~/client/components/ui/empty.tsx";
+import Image from "lucide-solid/icons/image";
+import { Button } from "~/client/components/ui/button.tsx";
+import CirclePlus from "lucide-solid/icons/circle-plus";
+
 function LocationLogPage() {
   const params = useParams<{ slug: string; id: string }>();
   const [isDialogOpen, setIsDialogOpen] = createSignal(false);
@@ -100,6 +113,39 @@ function LocationLogPage() {
               }
             </h2>
             <p class="text-sm">{log().description}</p>
+            <div class="flex min-h-64 items-center justify-center p-4">
+              <Show
+                when={log().images.length > 0}
+                fallback={
+                  <Empty>
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">
+                        <Image />
+                      </EmptyMedia>
+                      <EmptyTitle>
+                        Add images to get started
+                      </EmptyTitle>
+                      <EmptyDescription>
+                        The images you add will be displayed here.
+                      </EmptyDescription>
+                    </EmptyHeader>
+                    <EmptyContent>
+                      <div class="flex flex-col justify-center gap-4 sm:flex-row sm:gap-6">
+                        <Button
+                          as={A}
+                          href={`/dashboard/location/${params.slug}/${params.id}/images`}
+                        >
+                          Add Image
+                          <CirclePlus size={24} />
+                        </Button>
+                      </div>
+                    </EmptyContent>
+                  </Empty>
+                }
+              >
+                <ImageCarousel images={log().images} />
+              </Show>
+            </div>
           </>
         )}
       </Show>

@@ -12,7 +12,7 @@ import {
   UpdateLocationLog as UpdateLocationLogSchema,
 } from "../api/db/schema/location-log.ts";
 import { session, user } from "../api/db/schema/auth.ts";
-import { SelectLocationLogImage } from "../api/db/schema/location-log-image.ts";
+import { locationLogImage } from "../api/db/schema/location-log-image.ts";
 
 export type User = typeof user.$inferSelect;
 export type Session = typeof session.$inferSelect;
@@ -20,7 +20,7 @@ export type Session = typeof session.$inferSelect;
 // LOCATIONS
 
 export type SelectLocation = z.infer<typeof SelectLocationSchema> & {
-  locationLogs?: SelectLocationLog[];
+  locationLogs?: SelectLocationLogWithImages[];
 };
 export type InsertLocation = z.infer<typeof InsertLocationSchema>;
 export type UpdateLocation = z.infer<typeof UpdateLocationSchema>;
@@ -32,6 +32,8 @@ export type SelectLocationLogWithImages = SelectLocationLog & {
 };
 export type InsertLocationLog = z.infer<typeof InsertLocationLogSchema>;
 export type UpdateLocationLog = z.infer<typeof UpdateLocationLogSchema>;
+
+export type SelectLocationLogImage = typeof locationLogImage.$inferSelect;
 
 export type SearchQuery = z.infer<typeof SearchSchema>;
 

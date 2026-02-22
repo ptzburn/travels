@@ -16,7 +16,7 @@ local.db*
 
 # dependencies
 /node_modules
-
+docker-data/
 /src/api/db/migrations
 
 # IDEs and editors
