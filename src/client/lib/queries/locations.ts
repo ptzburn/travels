@@ -1,6 +1,7 @@
 import { rpcClient } from "~/shared/rpc-client.ts";
 import { query } from "@solidjs/router";
 import { SearchQuery } from "~/shared/types.ts";
+import { getRequestEvent, isServer } from "solid-js/web";
 
 export const userLocationsQuery = query(async () => {
   "use server";
@@ -16,13 +17,29 @@ export const userLocationsQuery = query(async () => {
 }, "locations");
 
 export const userLocationQuery = query(async (slug?: string) => {
-  "use server";
-
   if (!slug) {
     throw new Error("Slug is required");
   }
+
+  let cookie: string;
+
+  if (isServer) {
+    const event = getRequestEvent();
+    if (!event) {
+      throw new Error("No request event available");
+    }
+    cookie = event.request.headers.get("cookie") ?? "";
+  } else {
+    cookie = document.cookie;
+  }
+
   const response = await rpcClient.locations[":slug"].$get(
     { param: { slug } },
+    {
+      headers: {
+        cookie,
+      },
+    },
   );
 
   if (!response.ok) {
