@@ -9,7 +9,7 @@ export function hcWithType(...args: Parameters<typeof hc>): Client {
   return hc<AppType>(...args);
 }
 
-export const rpcClient = hcWithType(`${import.meta.env.VITE_APP_URL}/api`, {
+export const rpcClient = hcWithType(`${import.meta.env.VITE_HOST_URL}/api`, {
   init: {
     credentials: "include",
   },
