@@ -124,7 +124,7 @@ export default function MapComponent() {
       const log = () => {
         const currentLogs = logs();
         if (!currentLogs || currentLogs.length < 1) return;
-        return currentLogs.filter((log) => log.id === params.id);
+        return currentLogs.filter((log) => log.id === Number(params.id));
       };
       return log() ?? [];
     }

@@ -1,4 +1,4 @@
-import { For, Index, Suspense } from "solid-js";
+import { createMemo, For, Index, Suspense } from "solid-js";
 import { A, useLocation, useParams } from "@solidjs/router";
 
 import { Collapsible } from "~/client/components/ui/collapsible.tsx";
@@ -13,6 +13,7 @@ import { Skeleton } from "~/client/components/ui/skeleton.tsx";
 import MapPinPen from "lucide-solid/icons/map-pin-pen";
 import Map from "lucide-solid/icons/map";
 import CirclePlus from "lucide-solid/icons/circle-plus";
+import Image from "lucide-solid/icons/image";
 import ArrowLeft from "lucide-solid/icons/arrow-left";
 import { hasSlugAndId, hasSlugAndNotId } from "~/client/lib/utils.ts";
 import { MAIN_PAGES } from "~/client/lib/constants.ts";
@@ -31,10 +32,18 @@ const navMain = [
   },
 ];
 
-const navLogs = (slug: string) => [{
+const navLogs = (slug: string, id: string) => [{
   title: "Back to Location",
   url: `/dashboard/location/${slug}`,
   icon: ArrowLeft,
+}, {
+  title: "Edit Location Log",
+  url: `/dashboard/location/${slug}/${id}/edit`,
+  icon: MapPinPen,
+}, {
+  title: "Manage Images",
+  url: `/dashboard/location/${slug}/${id}/images`,
+  icon: Image,
 }];
 
 const navLocation = (slug: string, title: string) => [
@@ -70,13 +79,16 @@ export function NavMain() {
     if (MAIN_PAGES.has(location.pathname)) return navMain;
 
     if (hasSlugAndNotId(params.slug, params.id)) {
-      const currentLocation = () =>
-        locations().find((loc) => loc.slug === params.slug);
+      const currentLocation = createMemo(() =>
+        locations().find((loc) => loc.slug === params.slug)
+      );
       const title = currentLocation()?.name ?? "Location";
       return navLocation(params.slug!, title);
     }
 
-    if (hasSlugAndId(params.slug, params.id)) return navLogs(params.slug!);
+    if (hasSlugAndId(params.slug, params.id)) {
+      return navLogs(params.slug!, params.id!);
+    }
 
     return [];
   };

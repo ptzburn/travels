@@ -1,17 +1,23 @@
 import { z } from "@hono/zod-openapi";
 
 const ImageFileSchema = z.object({
-  file: z.instanceof(File)
+  file: z.instanceof(Blob)
     .refine(
-      (file) => ["image/jpeg", "image/png"].includes(file.type),
+      (file) => file.type === "image/webp",
       {
-        message: "Invalid file type. Only images are allowed.",
+        message: "Invalid file type. Only webp images are allowed.",
       },
     )
     .refine(
-      (file) => file.size <= 2 * 1024 * 1024, // 2MB
+      (file) => file.size > 0,
       {
-        message: "File too large. Maximum size is 2MB.",
+        message: "File is empty.",
+      },
+    )
+    .refine(
+      (file) => file.size <= 1 * 1024 * 1024, // 1MB
+      {
+        message: "File too large. Maximum size is 1MB.",
       },
     )
     .openapi({

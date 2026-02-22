@@ -23,7 +23,10 @@ import {
   InsertLocationLog as InsertLocationLogSchema,
   UpdateLocationLog as UpdateLocationLogSchema,
 } from "~/api/db/schema/location-log.ts";
-import { addLocationLogAction } from "../lib/actions/logs.ts";
+import {
+  addLocationLogAction,
+  updateLocationLogAction,
+} from "../lib/actions/logs.ts";
 
 type LocationLogFormProps = {
   location: SelectLocation;
@@ -35,6 +38,7 @@ export function LocationLogForm(props: LocationLogFormProps) {
   const [navigation, setNavigation] = createSignal<(() => void) | null>(null);
 
   const addLocationLog = useAction(addLocationLogAction);
+  const updateLocationLog = useAction(updateLocationLogAction);
 
   const navigate = useNavigate();
 
@@ -54,16 +58,21 @@ export function LocationLogForm(props: LocationLogFormProps) {
         ? UpdateLocationLogSchema
         : InsertLocationLogSchema,
     },
-    onSubmitInvalid: ({ value }) => {
-      console.log(value);
+    onSubmitInvalid: () => {
       toast.error("Check the input values");
     },
     onSubmit: async ({ value, formApi }) => {
       try {
-        const result = await addLocationLog(
-          value as InsertLocationLog,
-          props.location.slug,
-        );
+        const result = props.initialLocationLog
+          ? await updateLocationLog(
+            props.location.slug,
+            props.initialLocationLog.id.toString(),
+            value as UpdateLocationLog,
+          )
+          : await addLocationLog(
+            value as InsertLocationLog,
+            props.location.slug,
+          );
 
         if ("errors" in result && result.errors) {
           for (const error of result.errors) {

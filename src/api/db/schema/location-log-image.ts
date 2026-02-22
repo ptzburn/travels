@@ -2,8 +2,7 @@ import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { locationLog } from "./location-log.ts";
 import { user } from "./auth.ts";
 import { relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { createSelectSchema } from "drizzle-zod";
 
 export const locationLogImage = sqliteTable("locationLogImage", {
   id: int().primaryKey({ autoIncrement: true }),
@@ -28,19 +27,4 @@ export const locationLogImageRelations = relations(
   }),
 );
 
-export const InsertLocationLogImage = createInsertSchema(locationLogImage, {
-  key: (field) =>
-    field.regex(
-      /^\d+\/\d+\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.jpg$/,
-      "Invalid key",
-    ),
-}).omit({
-  id: true,
-  locationLogId: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export type InsertLocationLogImage = z.infer<typeof InsertLocationLogImage>;
-export type SelectLocationLogImage = typeof locationLogImage.$inferSelect;
+export const SelectLocationLogImage = createSelectSchema(locationLogImage);

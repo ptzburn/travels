@@ -2,12 +2,10 @@
 import { and, eq } from "drizzle-orm";
 import { customAlphabet } from "nanoid";
 
-import type { UpdateLocation } from "~/shared/types.ts";
+import type { InsertLocation, UpdateLocation } from "~/shared/types.ts";
 
-import type { InsertLocation } from "../schema/location.ts";
-
-import db from "..";
-import { location } from "../schema/location.ts";
+import db from "~/api/db/index.ts";
+import { location } from "~/api/db/schema/location.ts";
 
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 5);
 
@@ -21,6 +19,13 @@ export async function findLocation(slug: string, userId: number) {
       locationLogs: {
         orderBy(fields, operators) {
           return operators.desc(fields.startedAt);
+        },
+        with: {
+          images: {
+            orderBy(fields, operators) {
+              return operators.desc(fields.createdAt);
+            },
+          },
         },
       },
     },

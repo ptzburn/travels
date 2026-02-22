@@ -79,7 +79,7 @@ function LocationsProviderWithSession(props: ParentProps) {
 }
 
 function LocationProviderWithSession(props: ParentProps) {
-  const params = useParams<{ slug: string }>();
+  const params = useParams();
   const location = createAsync(() => userLocationQuery(params.slug), {
     initialValue: [],
   });
