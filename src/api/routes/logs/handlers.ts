@@ -27,7 +27,6 @@ import {
 } from "~/api/db/queries/location-log.ts";
 
 import env from "~/env.ts";
-import app from "~/api/app.ts";
 import { insertLocationLogImage } from "~/api/db/queries/location-log-image.ts";
 
 export const get: AppRouteHandler<GetRoute> = async (c) => {
@@ -130,12 +129,8 @@ export const uploadImage: AppRouteHandler<UploadImageRoute> = async (
   c,
 ) => {
   const user = c.get("user");
-  const { slug, id } = c.req.valid("param");
+  const { id } = c.req.valid("param");
   const { file } = c.req.valid("form");
-
-  await app.request(`/api/locations/${slug}/${id}/`, {
-    headers: c.req.raw.headers,
-  });
 
   const client = new S3Client({
     region: env.S3_REGION,
