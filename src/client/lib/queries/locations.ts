@@ -17,9 +17,9 @@ export const userLocationsQuery = query(async () => {
 
 export const userLocationQuery = query(async (slug?: string) => {
   "use server";
-
-  if (!slug) return [];
-
+  if (!slug) {
+    throw new Error("Slug is required");
+  }
   const response = await rpcClient.locations[":slug"].$get(
     { param: { slug } },
   );
