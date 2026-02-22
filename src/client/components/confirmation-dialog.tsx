@@ -86,7 +86,11 @@ export function ConfirmationDialog(props: ConfirmationDialogProps) {
             </AlertDialogDescription>
           </div>
           <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-x-2">
-            <Button variant="outline" class="mt-2 sm:mt-0" onClick={handleCancel}>
+            <Button
+              variant="outline"
+              class="mt-2 sm:mt-0"
+              onClick={handleCancel}
+            >
               {props.cancelText ?? defaultCancelText}
             </Button>
             <Button onClick={handleConfirm}>

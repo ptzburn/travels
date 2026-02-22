@@ -8,7 +8,7 @@ import {
   LongSchema,
   NameSchema,
 } from "~/shared/zod-schemas.ts";
-import { locationLog, SelectLocationLog } from "./location-log.ts";
+import { locationLog, SelectLocationLogWithImages } from "./location-log.ts";
 import { z } from "zod";
 
 export const location = sqliteTable("location", {
@@ -33,7 +33,7 @@ export const locationRelations = relations(location, ({ many }) => ({
 
 export const SelectLocation = createSelectSchema(location);
 export const SelectLocationWithLogsSchema = SelectLocation.extend({
-  locationLogs: z.array(SelectLocationLog),
+  locationLogs: z.array(SelectLocationLogWithImages),
 });
 export const InsertLocation = createInsertSchema(location, {
   name: NameSchema,
@@ -48,9 +48,3 @@ export const InsertLocation = createInsertSchema(location, {
   updatedAt: true,
 });
 export const UpdateLocation = InsertLocation.partial();
-
-export type InsertLocation = z.infer<typeof InsertLocation>;
-export type SelectLocation = typeof location.$inferSelect;
-export type SelectLocationWithLogs = SelectLocation & {
-  locationLogs: SelectLocationLog[];
-};

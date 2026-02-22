@@ -56,13 +56,14 @@ function DefaultLayout(props: RouteSectionProps) {
     isServer ? getServerCookies() : document.cookie,
   );
 
-  const params = useParams<{ slug: string }>();
+  const params = useParams();
 
-  const EDIT_PAGES = (slug: string) =>
+  const EDIT_PAGES = (slug?: string, id?: string) =>
     new Set([
       "/dashboard/add",
       `/dashboard/location/${slug}/edit`,
       `/dashboard/location/${slug}/add`,
+      `/dashboard/location/${slug}/${id}/edit`,
     ]);
 
   const location = useLocation();
@@ -109,7 +110,7 @@ function DefaultLayout(props: RouteSectionProps) {
                     </header>
                     <main
                       class={`flex flex-1 ${
-                        EDIT_PAGES(params.slug).has(
+                        EDIT_PAGES(params.slug, params.id).has(
                             location.pathname,
                           )
                           ? "flex-row"
