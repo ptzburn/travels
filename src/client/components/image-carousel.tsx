@@ -28,7 +28,7 @@ export function ImageCarousel(props: ImageCarouselProps) {
               <Card>
                 <CardContent>
                   <img
-                    src={`http://localhost:9000/images/${image().key}`}
+                    src={`${import.meta.env.VITE_S3_ENDPOINT}/${import.meta.env.VITE_S3_BUCKET}/${image().key}`}
                     alt="image"
                     class="size-full object-cover"
                   />
