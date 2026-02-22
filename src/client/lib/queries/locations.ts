@@ -17,6 +17,9 @@ export const userLocationsQuery = query(async () => {
 
 export const userLocationQuery = query(async (slug?: string) => {
   "use server";
+
+  console.log("slug", slug);
+
   if (!slug) {
     throw new Error("Slug is required");
   }

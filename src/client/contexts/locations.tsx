@@ -80,6 +80,7 @@ function LocationsProviderWithSession(props: ParentProps) {
 
 function LocationProviderWithSession(props: ParentProps) {
   const params = useParams();
+  console.log("Location Provider With Session");
   const location = createAsync(() => userLocationQuery(params.slug), {
     initialValue: [],
   });
