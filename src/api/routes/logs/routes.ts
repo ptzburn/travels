@@ -216,9 +216,9 @@ export const remove = createRoute({
 export const uploadImage = createRoute({
   summary: "uploads an image to a location log",
   description: "Upload an image to a location log",
-  tags,
+  tags: ["Images"],
   method: "post",
-  path: "/locations/{slug}/{id}/images",
+  path: "/images/{slug}/{id}",
   middleware: [authMiddleware, defaultRateLimiter],
   request: {
     params: SlugIdParamsSchema,

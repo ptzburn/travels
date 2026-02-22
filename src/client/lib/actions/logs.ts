@@ -68,7 +68,7 @@ export const deleteLocationLogAction = action(
 
 export const uploadLocationLogImageAction = action(
   async (slug: string, id: string, file: Blob) => {
-    const response = await rpcClient.locations[":slug"][":id"].images.$post({
+    const response = await rpcClient.images[":slug"][":id"].$post({
       param: { slug, id },
       form: { file },
     });

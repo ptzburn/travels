@@ -4,8 +4,8 @@ import { customAlphabet } from "nanoid";
 
 import type { InsertLocation, UpdateLocation } from "~/shared/types.ts";
 
-import db from "..";
-import { location } from "../schema/location.ts";
+import db from "~/api/db/index.ts";
+import { location } from "~/api/db/schema/location.ts";
 
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 5);
 
