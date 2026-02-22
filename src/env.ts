@@ -16,16 +16,16 @@ const EnvSchema = z.object({
   ]).default("info"),
   TURSO_DATABASE_URL: z.url(),
   TURSO_AUTH_TOKEN: z.string(),
-  HOST_URL: z.url(),
+  VITE_HOST_URL: z.url(),
   CONTACT_EMAIL: z.email(),
   BETTER_AUTH_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  S3_ENDPOINT: z.string(),
+  VITE_S3_ENDPOINT: z.string(),
   S3_ACCESS_KEY: z.string(),
   S3_ACCESS_SECRET: z.string(),
   S3_REGION: z.string(),
-  S3_BUCKET: z.string(),
+  VITE_S3_BUCKET: z.string(),
 });
 
 export type env = z.infer<typeof EnvSchema>;

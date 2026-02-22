@@ -1,4 +1,4 @@
-import { For, Index, Suspense } from "solid-js";
+import { createMemo, For, Index, Suspense } from "solid-js";
 import { A, useLocation, useParams } from "@solidjs/router";
 
 import { Collapsible } from "~/client/components/ui/collapsible.tsx";
@@ -79,8 +79,9 @@ export function NavMain() {
     if (MAIN_PAGES.has(location.pathname)) return navMain;
 
     if (hasSlugAndNotId(params.slug, params.id)) {
-      const currentLocation = () =>
-        locations().find((loc) => loc.slug === params.slug);
+      const currentLocation = createMemo(() =>
+        locations().find((loc) => loc.slug === params.slug)
+      );
       const title = currentLocation()?.name ?? "Location";
       return navLocation(params.slug!, title);
     }

@@ -139,7 +139,7 @@ export const uploadImage: AppRouteHandler<UploadImageRoute> = async (
 
   const client = new S3Client({
     region: env.S3_REGION,
-    endpoint: env.S3_ENDPOINT,
+    endpoint: env.VITE_S3_ENDPOINT,
     forcePathStyle: true,
     credentials: {
       accessKeyId: env.S3_ACCESS_KEY,
@@ -153,7 +153,7 @@ export const uploadImage: AppRouteHandler<UploadImageRoute> = async (
   const buffer = await file.arrayBuffer();
 
   const command = new PutObjectCommand({
-    Bucket: env.S3_BUCKET,
+    Bucket: env.VITE_S3_BUCKET,
     Key: key,
     Body: new Uint8Array(buffer),
     ContentType: file.type,
@@ -169,7 +169,7 @@ export const uploadImage: AppRouteHandler<UploadImageRoute> = async (
 
   await insertLocationLogImage(Number(id), key, user.id);
 
-  const url = `${env.S3_ENDPOINT}/${env.S3_BUCKET}/${key}`;
+  const url = `${env.VITE_S3_ENDPOINT}/${env.VITE_S3_BUCKET}/${key}`;
 
   return c.json({
     fileUrl: url,
